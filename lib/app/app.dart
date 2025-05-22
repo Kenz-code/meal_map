@@ -42,10 +42,35 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Center(
-          child: SwitchListTile(
-            title: const Text("Toggle Dark Mode"),
-            value: themeProvider.isDark,
-            onChanged: (_) => themeProvider.toggleTheme(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile(
+                title: const Text("Toggle Dark Mode"),
+                value: themeProvider.isDark,
+                onChanged: (_) => themeProvider.toggleTheme(),
+              ),
+
+              SizedBox(height: 8,),
+
+              ElevatedButton(onPressed: () {}, child: Text("Button")),
+
+              SizedBox(height: 8,),
+
+              TextButton(onPressed: () {}, child: Text("Button")),
+
+              SizedBox(height: 8,),
+
+              OutlinedButton(onPressed: () {}, child: Text("Button")),
+
+              SizedBox(height: 8,),
+
+              FilledButton(onPressed: () {}, child: Text("Button")),
+
+              SizedBox(height: 8,),
+
+              TextField(controller: TextEditingController(),),
+            ],
           ),
         ),
       ),

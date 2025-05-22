@@ -43,19 +43,24 @@ final ThemeData lightTheme = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
-    fillColor: lightColorScheme.surfaceVariant,
+    isDense: true,
+    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: lightColorScheme.outline),
+      borderSide: BorderSide.none,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none,
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: lightColorScheme.primary),
+      borderSide: BorderSide.none,
     ),
-    labelStyle: textTheme.bodyMedium?.copyWith(color: lightColorScheme.onSurface),
+    floatingLabelBehavior: FloatingLabelBehavior.never,
   ),
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: lightColorScheme.surfaceVariant,
+    backgroundColor: lightColorScheme.surfaceContainer,
     contentTextStyle: textTheme.bodyMedium?.copyWith(color: lightColorScheme.onSurfaceVariant),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -90,6 +95,7 @@ final ThemeData darkTheme = ThemeData(
     style: TextButton.styleFrom(
       foregroundColor: darkColorScheme.primary,
       textStyle: darkTextTheme.labelLarge,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -108,19 +114,25 @@ final ThemeData darkTheme = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
-    fillColor: darkColorScheme.surfaceVariant,
+    isDense: true,
+    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    fillColor: darkColorScheme.surfaceContainerLow,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: darkColorScheme.outline),
+      borderSide: BorderSide.none,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none,
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: darkColorScheme.primary),
+      borderSide: BorderSide.none,
     ),
-    labelStyle: darkTextTheme.bodyMedium?.copyWith(color: darkColorScheme.onSurface),
+    floatingLabelBehavior: FloatingLabelBehavior.never,
   ),
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: darkColorScheme.surfaceVariant,
+    backgroundColor: darkColorScheme.surfaceContainerLow,
     contentTextStyle: darkTextTheme.bodyMedium?.copyWith(color: darkColorScheme.onSurfaceVariant),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
