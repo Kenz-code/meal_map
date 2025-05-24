@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/theme/theme.dart';
+import 'package:meal_map/features/splash/screens/main.dart';
+import 'package:meal_map/routes/app_router.dart';
 import 'package:provider/provider.dart';
 import 'app_provider.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  GoRouter router;
+
+  MyApp({super.key, required this.router});
 
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,
       title: 'MealMap',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeProvider.currentMode,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      builder: (context, child) {
+        final initialized = context.watch<AppStateNotifier>().initialized;
+        if (!initialized) return const SplashScreen();
+        return child!;
+      },
       debugShowCheckedModeBanner: false,
     );
   }
