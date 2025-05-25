@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/app/app.dart';
 import 'package:meal_map/app/app_provider.dart';
+import 'package:meal_map/core/widgets/scaffold_with_nav_bar.dart';
+import 'package:meal_map/features/home/screens/main.dart';
 import 'package:provider/provider.dart';
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) {
@@ -11,20 +13,44 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     redirect: (context, state) {
       final appState = Provider.of<AppStateNotifier>(context, listen: false);
 
-      if (!appState.initialized) return null; // Show splash or wait
+      if (!appState.initialized) return null;
 
       final isLoggedIn = appState.isLoggedIn;
       final isFirstLaunch = appState.isFirstLaunch;
+      final fullPath = state.fullPath ?? '';
 
-      final goingToAuth = state.fullPath!.startsWith('/auth');
-      final goingToOnboarding = state.fullPath == '/onboarding';
+      final goingToAuth = fullPath.startsWith('/auth');
+      final goingToOnboarding = fullPath == '/onboarding';
+      final goingToShell = fullPath.startsWith('/meals') ||
+          fullPath.startsWith('/grocery') ||
+          fullPath.startsWith('/ideas') ||
+          fullPath.startsWith('/settings');
 
-      if (isFirstLaunch && !goingToOnboarding) return '/onboarding';
-      if (!isLoggedIn && !goingToAuth) return '/auth/login';
-      if (isLoggedIn && goingToAuth) return '/meals';
+      print("Redirect check: isLoggedIn=$isLoggedIn, isFirstLaunch=$isFirstLaunch, fullPath=$fullPath");
+
+      // Redirect to onboarding if needed
+      if (isFirstLaunch && !goingToOnboarding) {
+        return '/onboarding';
+      }
+
+      // If onboarding is complete but user is still on onboarding screen, redirect them away
+      if (!isFirstLaunch && goingToOnboarding) {
+        return isLoggedIn ? '/meals' : '/auth/login';
+      }
+
+      // If not logged in and not in auth flow, redirect to login
+      if (!isLoggedIn && !goingToAuth) {
+        return '/auth/login';
+      }
+
+      // If logged in and on root, redirect to meals
+      if (isLoggedIn && fullPath == '/') {
+        return '/meals';
+      }
 
       return null;
     },
+
     routes: [
       GoRoute(
         path: '/onboarding',
@@ -40,12 +66,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       ),
       StatefulShellRoute.indexedStack(
         // builder: (context, state, shell) => ScaffoldWithNavBar(navigationShell: shell),
-        builder: (context, state, shell) => Scaffold(),
+        builder: (context, state, shell) => ScaffoldWithNavBar(navigationShell: shell),
         branches: [
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/meals',
-              builder: (context, state) => MyHomePage(title: "awesome"),
+              builder: (context, state) => HomePage(),
               routes: [
                 GoRoute(
                   path: 'detail/:id',

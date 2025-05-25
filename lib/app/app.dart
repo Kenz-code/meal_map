@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/theme/theme.dart';
 import 'package:meal_map/features/splash/screens/main.dart';
-import 'package:meal_map/routes/app_router.dart';
 import 'package:provider/provider.dart';
 import 'app_provider.dart';
 
@@ -79,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               SizedBox(height: 8,),
 
-              TextField(controller: TextEditingController(),),
+              Text(GoRouter.of(context).state.path!)
             ],
           ),
         ),

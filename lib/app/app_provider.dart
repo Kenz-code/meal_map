@@ -36,10 +36,8 @@ class AppStateNotifier extends ChangeNotifier {
     // // Simulate checking login status
     // await Future.delayed(Duration(milliseconds: 500));
     // _isLoggedIn = false; // Replace with real authentication check
-    _isLoggedIn = true;
     _isFirstLaunch = false;
-
-    await Future.delayed(Duration(seconds: 1));
+    _isLoggedIn = true;
 
     _initialized = true;
     notifyListeners();
