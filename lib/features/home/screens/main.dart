@@ -64,14 +64,14 @@ class _HomePageState extends State<HomePage> {
 
   String _formatDate(DateTime date) {
     // e.g. Monday, May 27, 2025
-    return DateFormat('EEEE, MMMM d, y').format(date);
+    return DateFormat('EEEE, MMMM d').format(date);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Family Meal Planner'),
+        title: const Text('Meals'),
         centerTitle: true,
       ),
       body: Padding(
@@ -79,8 +79,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text(
-              'Week of ${_formatDate(_startOfWeek)} - ${_formatDate(_startOfWeek.add(const Duration(days: 6)))}',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              '${_formatDate(_startOfWeek)} - ${_formatDate(_startOfWeek.add(const Duration(days: 6)))}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -96,19 +96,19 @@ class _HomePageState extends State<HomePage> {
                     elevation: 4,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "$dayName, ${_formatDate(date)}",
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                            "${_formatDate(date)}",
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          const SizedBox(height: 18),
+                          const SizedBox(height: 16),
                           _buildMealRow('Breakfast', mealPlan.breakfast, () => _editMeal('breakfast', index)),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 8),
                           _buildMealRow('Lunch', mealPlan.lunch, () => _editMeal('lunch', index)),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 8),
                           _buildMealRow('Dinner', mealPlan.dinner, () => _editMeal('dinner', index)),
                         ],
                       ),
@@ -141,31 +141,27 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onLongPress: onLongPress,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
         child: Row(
           children: [
             Text(
               '$mealLabel:',
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: Theme.of(context).textTheme.labelLarge
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 meal?.name ?? '—',
-                style: const TextStyle(fontSize: 16),
+                style: Theme.of(context).textTheme.bodyLarge,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             if (meal?.cook != null) ...[
-              const Icon(Icons.person, size: 18, color: Colors.grey),
+              const Icon(Icons.person, size: 16),
               const SizedBox(width: 6),
               Text(
                 meal!.cook,
-                style: const TextStyle(color: Colors.grey, fontSize: 14),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ],

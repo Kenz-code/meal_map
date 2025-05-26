@@ -27,15 +27,14 @@ final ColorScheme lightColorScheme = const ColorScheme(
   errorContainer: Color(0xFFFFE3E3), // red-1
   onErrorContainer: Color(0xFFC92A2A), // red-8
 
-  // Background & Surface
-  background: Color(0xFFF8F9FA), // gray-0
-  onBackground: Color(0xFF212529), // gray-9
+  // Surface
   surface: Colors.white,
-  onSurface: Color(0xFF212529),
+  onSurface: Color(0xFF343A40), // grey-8
+  onSurfaceVariant: Color(0xFF343A40), // grey-8
 
   // Surface Containers
-  surfaceContainerHighest: Color(0xFFE9ECEF), // gray-1
-  surfaceContainerHigh: Color(0xFFF1F3F5),    // gray-2
+  surfaceContainerHighest: Color(0xFFE9ECEF), // gray-2
+  surfaceContainerHigh: Color(0xFFF1F3F5),    // gray-1
   surfaceContainer: Color(0xFFF8F9FA),        // gray-0
   surfaceContainerLow: Color(0xFFFDFEFF),     // very light, near-white
   surfaceContainerLowest: Colors.white,
@@ -72,18 +71,17 @@ final ColorScheme darkColorScheme = const ColorScheme(
   errorContainer: Color(0xFFC92A2A), // red-8
   onErrorContainer: Color(0xFFFFC9C9), // red-2
 
-  // Background & Surface
-  background: Color(0xFF121212),
-  onBackground: Color(0xFFF8F9FA), // gray-0
-  surface: Color(0xFF1E1E1E), // custom dark gray
-  onSurface: Color(0xFFF1F3F5), // gray-1
+  // Surface
+  surface: Color(0xFF212529), // grey-9
+  onSurface: Color(0xFFF8F9FA), // gray-0
+  onSurfaceVariant: Color(0xFFF8F9FA), // gray-0
 
   // Surface Containers
   surfaceContainerHighest: Color(0xFF495057), // gray-7
   surfaceContainerHigh: Color(0xFF3F454B), // between gray-7 and gray-8
   surfaceContainer: Color(0xFF343A40), // gray-8
   surfaceContainerLow: Color(0xFF2B2F33), // darker gray
-  surfaceContainerLowest: Color(0xFF1E1E1E),
+  surfaceContainerLowest: Color(0xFF212529), // grey-9
 
   // Outline & Shadow
   outline: Color(0xFF868E96), // gray-6

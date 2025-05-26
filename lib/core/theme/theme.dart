@@ -11,6 +11,7 @@ final ThemeData lightTheme = ThemeData(
     foregroundColor: lightColorScheme.onSurface,
     elevation: 0,
     centerTitle: true,
+    titleTextStyle: textTheme.titleLarge
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
