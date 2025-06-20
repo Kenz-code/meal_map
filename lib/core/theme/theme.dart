@@ -150,7 +150,7 @@ final ThemeData darkTheme = ThemeData(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: lightColorScheme.primary,
-      foregroundColor: lightColorScheme.onPrimary
+      backgroundColor: darkColorScheme.primary,
+      foregroundColor: darkColorScheme.onPrimary
   ),
 );

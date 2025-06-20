@@ -17,7 +17,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -31,8 +31,8 @@ class ScaffoldWithNavBar extends StatelessWidget {
             child: GNav(
               selectedIndex: navigationShell.currentIndex,
               onTabChange: _onTap,
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
+              rippleColor: Theme.of(context).colorScheme.surfaceContainer,
+              hoverColor: Theme.of(context).colorScheme.surfaceContainer,
               gap: 8,
               activeColor: Theme.of(context).colorScheme.onPrimary,
               iconSize: 24,
@@ -40,6 +40,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
               duration: Duration(milliseconds: 400),
               tabBackgroundColor: Theme.of(context).colorScheme.primary,
               color: Theme.of(context).colorScheme.onSurface,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               tabs: [
                 GButton(
                   icon: Icons.restaurant,
