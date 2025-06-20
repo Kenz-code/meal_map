@@ -3,11 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:meal_map/app/app.dart';
 import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/widgets/scaffold_with_nav_bar.dart';
-import 'package:meal_map/features/home/screens/main.dart';
+import 'package:meal_map/features/home/screens/create_meal_page.dart';
+import 'package:meal_map/features/home/screens/meals_page.dart';
 import 'package:provider/provider.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) {
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     initialLocation: '/onboarding',
     refreshListenable: appStateNotifier,
     redirect: (context, state) {
@@ -81,6 +85,36 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
                     return MyHomePage(title: "awesome");
                   },
                 ),
+                GoRoute(
+                  path: 'create',
+                  parentNavigatorKey: _rootNavigatorKey, // <— THIS IS IMPORTANT
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const CreateMealPage(),
+                    reverseTransitionDuration: const Duration(milliseconds: 150), // faster animation
+                    transitionDuration: const Duration(milliseconds: 150), // faster animation
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      final fade = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+                      final scale = Tween<double>(begin: 0.95, end: 1.0).animate(fade);
+                      final slide = Tween<Offset>(
+                        begin: const Offset(0, 0.1), // 10% down
+                        end: Offset.zero,
+                      ).animate(fade);
+
+                      return FadeTransition(
+                        opacity: fade,
+                        child: SlideTransition(
+                          position: slide,
+                          child: ScaleTransition(
+                            scale: scale,
+                            child: child,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
               ],
             ),
           ]),

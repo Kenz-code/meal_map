@@ -9,6 +9,7 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: lightColorScheme.surface,
     foregroundColor: lightColorScheme.onSurface,
+    surfaceTintColor: Colors.transparent,
     elevation: 0,
     centerTitle: true,
     titleTextStyle: textTheme.titleLarge
@@ -71,6 +72,10 @@ final ThemeData lightTheme = ThemeData(
     contentTextStyle: textTheme.bodyLarge?.copyWith(color: lightColorScheme.onSurface),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
   ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: lightColorScheme.primary,
+    foregroundColor: lightColorScheme.onPrimary
+  ),
 );
 
 final ThemeData darkTheme = ThemeData(
@@ -80,6 +85,7 @@ final ThemeData darkTheme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: darkColorScheme.surface,
     foregroundColor: darkColorScheme.onSurface,
+    surfaceTintColor: Colors.transparent,
     elevation: 0,
     centerTitle: true,
   ),
@@ -142,5 +148,9 @@ final ThemeData darkTheme = ThemeData(
     titleTextStyle: darkTextTheme.headlineSmall?.copyWith(color: darkColorScheme.onSurface),
     contentTextStyle: darkTextTheme.bodyLarge?.copyWith(color: darkColorScheme.onSurface),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: lightColorScheme.primary,
+      foregroundColor: lightColorScheme.onPrimary
   ),
 );
