@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class ScaffoldWithNavBar extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -14,15 +15,52 @@ class ScaffoldWithNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onTap,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.restaurant), label: 'Meals'),
-          NavigationDestination(icon: Icon(Icons.shopping_cart), label: 'Grocery'),
-          NavigationDestination(icon: Icon(Icons.lightbulb), label: 'Ideas'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              color: Colors.black.withOpacity(.1),
+            )
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: GNav(
+              selectedIndex: navigationShell.currentIndex,
+              onTabChange: _onTap,
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Theme.of(context).colorScheme.onPrimary,
+              iconSize: 24,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: Duration(milliseconds: 400),
+              tabBackgroundColor: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onSurface,
+              tabs: [
+                GButton(
+                  icon: Icons.restaurant,
+                  text: 'Meals',
+                ),
+                GButton(
+                  icon: Icons.shopping_cart,
+                  text: 'Grocery',
+                ),
+                GButton(
+                  icon: Icons.lightbulb,
+                  text: 'Ideas',
+                ),
+                GButton(
+                  icon: Icons.settings,
+                  text: 'Settings',
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
