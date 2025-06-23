@@ -76,32 +76,37 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => context.push('/meals/create'),
         child: Icon(Icons.add_rounded),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () => _changeWeek(-1),
-                  iconSize: 16,
-                  icon: Icon(Icons.arrow_back_ios_rounded),
-                ),
-                Text(
-                  '${_formatDate(_startOfWeek)} - ${_formatDate(_startOfWeek.add(const Duration(days: 6)))}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                IconButton(
-                  onPressed: () => _changeWeek(1),
-                  iconSize: 16,
-                  icon: Icon(Icons.arrow_forward_ios_rounded),
-                ),
-              ],
-            ),
-            const SizedBox(height:16),
-            Expanded(
+      body: Column(
+        children: [
+          const SizedBox(height: 16),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  IconButton(
+                    onPressed: () => _changeWeek(-1),
+                    iconSize: 16,
+                    icon: Icon(Icons.arrow_back_ios_rounded),
+                  ),
+                  Text(
+                    '${_formatDate(_startOfWeek)} - ${_formatDate(_startOfWeek.add(const Duration(days: 6)))}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  IconButton(
+                    onPressed: () => _changeWeek(1),
+                    iconSize: 16,
+                    icon: Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height:16),
+            ],
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
               child: ListView.builder(
                 itemCount: 7,
                 itemBuilder: (context, index) {
@@ -113,8 +118,8 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

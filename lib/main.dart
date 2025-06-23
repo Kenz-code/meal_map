@@ -13,7 +13,6 @@ void main() {
       ChangeNotifierProvider(
         create: (_) => AppStateNotifier(),
       ),
-
     ],
     child: Consumer<AppStateNotifier>(
       builder: (context, appState, _) {
