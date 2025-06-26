@@ -3,7 +3,7 @@ import 'package:meal_map/core/theme/theme.dart';
 import 'dart:async';
 
 class ThemeProvider extends ChangeNotifier {
-  bool _isDark = false;
+  bool _isDark = true;
   bool get isDark => _isDark;
 
   ThemeMode get currentMode => _isDark ? ThemeMode.dark : ThemeMode.light;

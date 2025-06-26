@@ -77,7 +77,7 @@ class _GroceryPageState extends State<GroceryPage> {
 
       crossedOffItems.insert(0, item);
 
-      if (crossedOffItems.length > 5) {
+      if (crossedOffItems.length > 10) {
         crossedOffItems.removeLast();
       }
     });
@@ -197,6 +197,16 @@ class _GroceryPageState extends State<GroceryPage> {
     );
   }
 
+  void _navigateAndAddGrocery() async {
+    final GroceryItem? result = await context.push<GroceryItem?>('/grocery/create');
+
+    if (result != null) {
+      setState(() {
+        categoryItems[result.category]!.add(result);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,7 +215,7 @@ class _GroceryPageState extends State<GroceryPage> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: null,
-        onPressed: () => context.push('/grocery/create'),
+        onPressed: () => _navigateAndAddGrocery(),
         child: Icon(Icons.add_rounded),
       ),
       body: SingleChildScrollView(

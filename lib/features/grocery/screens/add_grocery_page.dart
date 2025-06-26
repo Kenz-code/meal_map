@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-class GroceryItem {
-  final String name;
-  final String category;
-  bool crossedOff;
-
-  GroceryItem({
-    required this.name,
-    required this.category,
-    this.crossedOff = false,
-  });
-}
+import 'package:meal_map/features/grocery/screens/grocery_page.dart';
 
 class AddGroceryPage extends StatefulWidget {
   const AddGroceryPage({super.key});
@@ -41,7 +30,7 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
         name: _nameController.text.trim(),
         category: _selectedCategory,
       );
-      Navigator.pop(context, newItem);
+      context.pop(newItem);
     }
   }
 
