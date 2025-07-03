@@ -32,7 +32,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
           fullPath.startsWith('/ideas') ||
           fullPath.startsWith('/settings');
 
-      print("Redirect check: isLoggedIn=$isLoggedIn, isFirstLaunch=$isFirstLaunch, fullPath=$fullPath");
+      print(
+          "Redirect check: isLoggedIn=$isLoggedIn, isFirstLaunch=$isFirstLaunch, fullPath=$fullPath");
 
       // Redirect to onboarding if needed
       if (isFirstLaunch && !goingToOnboarding) {
@@ -56,7 +57,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
 
       return null;
     },
-
     routes: [
       GoRoute(
         path: '/onboarding',
@@ -72,7 +72,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       ),
       StatefulShellRoute.indexedStack(
         // builder: (context, state, shell) => ScaffoldWithNavBar(navigationShell: shell),
-        builder: (context, state, shell) => ScaffoldWithNavBar(navigationShell: shell),
+        builder: (context, state, shell) =>
+            ScaffoldWithNavBar(navigationShell: shell),
         branches: [
           StatefulShellBranch(routes: [
             GoRoute(
@@ -90,33 +91,42 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
                 GoRoute(
                   path: 'create',
                   parentNavigatorKey: _rootNavigatorKey, // <— THIS IS IMPORTANT
-                  pageBuilder: (context, state) => CustomTransitionPage(
-                    key: state.pageKey,
-                    child: const CreateMealPage(),
-                    reverseTransitionDuration: const Duration(milliseconds: 150), // faster animation
-                    transitionDuration: const Duration(milliseconds: 150), // faster animation
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      final fade = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
-                      final scale = Tween<double>(begin: 0.95, end: 1.0).animate(fade);
-                      final slide = Tween<Offset>(
-                        begin: const Offset(0, 0.1), // 10% down
-                        end: Offset.zero,
-                      ).animate(fade);
+                  pageBuilder: (context, state) {
+                    final fald = state.extra as List<DateTime>;
+                    return CustomTransitionPage(
+                      key: state.pageKey,
+                      child: CreateMealPage(
+                        firstAndLastDays: fald,
+                      ),
+                      reverseTransitionDuration:
+                          const Duration(milliseconds: 150), // faster animation
+                      transitionDuration:
+                          const Duration(milliseconds: 150), // faster animation
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        final fade = CurvedAnimation(
+                            parent: animation, curve: Curves.easeInOut);
+                        final scale =
+                            Tween<double>(begin: 0.95, end: 1.0).animate(fade);
+                        final slide = Tween<Offset>(
+                          begin: const Offset(0, 0.1), // 10% down
+                          end: Offset.zero,
+                        ).animate(fade);
 
-                      return FadeTransition(
-                        opacity: fade,
-                        child: SlideTransition(
-                          position: slide,
-                          child: ScaleTransition(
-                            scale: scale,
-                            child: child,
+                        return FadeTransition(
+                          opacity: fade,
+                          child: SlideTransition(
+                            position: slide,
+                            child: ScaleTransition(
+                              scale: scale,
+                              child: child,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
+                        );
+                      },
+                    );
+                  },
                 ),
-
               ],
             ),
           ]),
@@ -131,11 +141,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
                   pageBuilder: (context, state) => CustomTransitionPage(
                     key: state.pageKey,
                     child: const AddGroceryPage(),
-                    reverseTransitionDuration: const Duration(milliseconds: 150), // faster animation
-                    transitionDuration: const Duration(milliseconds: 150), // faster animation
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      final fade = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
-                      final scale = Tween<double>(begin: 0.95, end: 1.0).animate(fade);
+                    reverseTransitionDuration:
+                        const Duration(milliseconds: 150), // faster animation
+                    transitionDuration:
+                        const Duration(milliseconds: 150), // faster animation
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      final fade = CurvedAnimation(
+                          parent: animation, curve: Curves.easeInOut);
+                      final scale =
+                          Tween<double>(begin: 0.95, end: 1.0).animate(fade);
                       final slide = Tween<Offset>(
                         begin: const Offset(0, 0.1), // 10% down
                         end: Offset.zero,

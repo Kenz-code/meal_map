@@ -30,13 +30,13 @@ final ColorScheme lightColorScheme = const ColorScheme(
   // Surface
   surface: Colors.white,
   onSurface: Color(0xFF343A40), // grey-8
-  onSurfaceVariant: Color(0xFF343A40), // grey-8
+  onSurfaceVariant: Color(0xFF868E96), // grey-6
 
   // Surface Containers
   surfaceContainerHighest: Color(0xFFE9ECEF), // gray-2
-  surfaceContainerHigh: Color(0xFFF1F3F5),    // gray-1
-  surfaceContainer: Color(0xFFF8F9FA),        // gray-0
-  surfaceContainerLow: Color(0xFFFDFEFF),     // very light, near-white
+  surfaceContainerHigh: Color(0xFFF1F3F5), // gray-1
+  surfaceContainer: Color(0xFFF8F9FA), // gray-0
+  surfaceContainerLow: Color(0xFFFDFEFF), // very light, near-white
   surfaceContainerLowest: Colors.white,
 
   // Outline & Shadow
@@ -74,7 +74,7 @@ final ColorScheme darkColorScheme = const ColorScheme(
   // Surface
   surface: Color(0xFF212529), // grey-9
   onSurface: Color(0xFFF8F9FA), // gray-0
-  onSurfaceVariant: Color(0xFFF8F9FA), // gray-0
+  onSurfaceVariant: Color(0xFFADB5BD), // gray-5
 
   // Surface Containers
   surfaceContainerHighest: Color(0xFF495057), // gray-7

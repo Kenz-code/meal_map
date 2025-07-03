@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meal_map/features/home/data/meals_local_datasource.dart';
+import 'package:meal_map/features/home/models/meal_data.dart';
 
 class CreateMealPage extends StatefulWidget {
-  const CreateMealPage({Key? key}) : super(key: key);
+  const CreateMealPage({super.key, required this.firstAndLastDays});
+
+  final List<DateTime> firstAndLastDays;
 
   @override
   State<CreateMealPage> createState() => _CreateMealPageState();
@@ -17,6 +21,11 @@ class _CreateMealPageState extends State<CreateMealPage> {
   String? _cook;
   String? _notes;
   DateTime _selectedDate = DateTime.now();
+
+  DateTime? firstDay;
+  DateTime? lastDay;
+
+  bool saving = false;
 
   final List<String> mealTypes = ['Breakfast', 'Lunch', 'Dinner'];
 
@@ -34,23 +43,83 @@ class _CreateMealPageState extends State<CreateMealPage> {
     }
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Replace this with your saving logic
-      debugPrint('Meal Created:');
-      debugPrint('Name: $_mealName');
-      debugPrint('Type: $_mealType');
-      debugPrint('Cook: $_cook');
-      debugPrint('Date: $_selectedDate');
-      debugPrint('Notes: $_notes');
+      _selectedDate = DateTime(
+          _selectedDate.year, _selectedDate.month, _selectedDate.day, 12, 0);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Meal created!')),
-      );
+      bool okToSave = true;
+      // check if selectedDate is before firstDay or after lastDay and conform with user
+      if (_selectedDate.isBefore(widget.firstAndLastDays[0])) {
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Date out of range"),
+                  content: Text(
+                      "The selected date is from a past week and won't appear on the Meals Screen."),
+                  actions: [
+                    TextButton(
+                      child: Text("Back"),
+                      onPressed: () {
+                        okToSave = false;
+                        context.pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text("Save"),
+                      onPressed: () {
+                        context.pop();
+                      },
+                    ),
+                  ],
+                ));
+      } else if (_selectedDate.isAfter(widget.firstAndLastDays[1])) {
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Date out of range"),
+                  content: Text(
+                      "The selected date is too far in the future and won't appear on the Meals Screen until it's within 3 weeks."),
+                  actions: [
+                    TextButton(
+                      child: Text("Back"),
+                      onPressed: () {
+                        okToSave = false;
+                        context.pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text("Save"),
+                      onPressed: () {
+                        context.pop();
+                      },
+                    ),
+                  ],
+                ));
+      }
 
-      context.pop(); // go_router
+      final MealData mealData = MealData(
+          mealName: _mealName!,
+          mealType: _mealType!,
+          cook: _cook!,
+          notes: _notes,
+          dateTime: _selectedDate);
+
+      if (okToSave) {
+        setState(() {
+          saving = true;
+        });
+
+        await MealsLocalDatasource.saveMeal(mealData);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Meal created!')),
+        );
+
+        context.pop();
+      }
     }
   }
 
@@ -69,33 +138,36 @@ class _CreateMealPageState extends State<CreateMealPage> {
               decoration: const InputDecoration(
                 hintText: 'e.g. Steak and Mashed Potatoes',
               ),
-              validator: (value) => value == null || value.isEmpty ? 'Please enter a meal name' : null,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Please enter a meal name'
+                  : null,
               onSaved: (value) => _mealName = value,
             ),
             const SizedBox(height: 24),
-
             Text('Meal Type', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             DropdownButtonFormField<String>(
               value: _mealType,
               hint: const Text('Select meal type'),
               items: mealTypes
-                  .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                  .map((type) =>
+                      DropdownMenuItem(value: type, child: Text(type)))
                   .toList(),
-              validator: (value) => value == null ? 'Please select a meal type' : null,
+              validator: (value) =>
+                  value == null ? 'Please select a meal type' : null,
               onChanged: (value) => setState(() => _mealType = value),
             ),
             const SizedBox(height: 24),
-
             Text('Cook', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             TextFormField(
               decoration: const InputDecoration(hintText: 'e.g. John Smith'),
-              validator: (value) => value == null || value.isEmpty ? 'Please enter the cook\'s name' : null,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Please enter the cook\'s name'
+                  : null,
               onSaved: (value) => _cook = value,
             ),
             const SizedBox(height: 24),
-
             Text('Meal Date', style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
             Row(
@@ -113,7 +185,6 @@ class _CreateMealPageState extends State<CreateMealPage> {
               ],
             ),
             const SizedBox(height: 24),
-
             Text('Notes', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             TextFormField(
@@ -124,10 +195,11 @@ class _CreateMealPageState extends State<CreateMealPage> {
               onSaved: (value) => _notes = value,
             ),
             const SizedBox(height: 30),
-
             ElevatedButton(
-              onPressed: _submitForm,
-              child: const Text('Save Meal'),
+              onPressed: !saving ? _submitForm : null,
+              child: !saving
+                  ? const Text('Save Meal')
+                  : CircularProgressIndicator(),
             ),
           ],
         ),

@@ -7,13 +7,12 @@ final ThemeData lightTheme = ThemeData(
   colorScheme: lightColorScheme,
   textTheme: textTheme,
   appBarTheme: AppBarTheme(
-    backgroundColor: lightColorScheme.surface,
-    foregroundColor: lightColorScheme.onSurface,
-    surfaceTintColor: Colors.transparent,
-    elevation: 0,
-    centerTitle: true,
-    titleTextStyle: textTheme.titleLarge
-  ),
+      backgroundColor: lightColorScheme.surface,
+      foregroundColor: lightColorScheme.onSurface,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      titleTextStyle: textTheme.titleLarge),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: lightColorScheme.primary,
@@ -36,7 +35,7 @@ final ThemeData lightTheme = ThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: lightColorScheme.surfaceContainer,
     elevation: 1,
     margin: EdgeInsets.all(8),
@@ -46,6 +45,8 @@ final ThemeData lightTheme = ThemeData(
     filled: true,
     isDense: true,
     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    hintStyle:
+        textTheme.bodyLarge!.copyWith(color: lightColorScheme.onSurfaceVariant),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide.none,
@@ -62,20 +63,22 @@ final ThemeData lightTheme = ThemeData(
   ),
   snackBarTheme: SnackBarThemeData(
     backgroundColor: lightColorScheme.surfaceContainer,
-    contentTextStyle: textTheme.bodyMedium?.copyWith(color: lightColorScheme.onSurfaceVariant),
+    contentTextStyle: textTheme.bodyMedium
+        ?.copyWith(color: lightColorScheme.onSurfaceVariant),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: lightColorScheme.surface,
-    titleTextStyle: textTheme.headlineSmall?.copyWith(color: lightColorScheme.onSurface),
-    contentTextStyle: textTheme.bodyLarge?.copyWith(color: lightColorScheme.onSurface),
+    titleTextStyle:
+        textTheme.headlineSmall?.copyWith(color: lightColorScheme.onSurface),
+    contentTextStyle:
+        textTheme.bodyLarge?.copyWith(color: lightColorScheme.onSurface),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-    backgroundColor: lightColorScheme.primary,
-    foregroundColor: lightColorScheme.onPrimary
-  ),
+      backgroundColor: lightColorScheme.primary,
+      foregroundColor: lightColorScheme.onPrimary),
 );
 
 final ThemeData darkTheme = ThemeData(
@@ -112,7 +115,7 @@ final ThemeData darkTheme = ThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: darkColorScheme.surfaceContainer,
     elevation: 1,
     margin: EdgeInsets.all(8),
@@ -123,6 +126,8 @@ final ThemeData darkTheme = ThemeData(
     isDense: true,
     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     fillColor: darkColorScheme.surfaceContainerLow,
+    hintStyle: darkTextTheme.bodyLarge!
+        .copyWith(color: darkColorScheme.onSurfaceVariant),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide.none,
@@ -139,18 +144,20 @@ final ThemeData darkTheme = ThemeData(
   ),
   snackBarTheme: SnackBarThemeData(
     backgroundColor: darkColorScheme.surfaceContainerLow,
-    contentTextStyle: darkTextTheme.bodyMedium?.copyWith(color: darkColorScheme.onSurfaceVariant),
+    contentTextStyle: darkTextTheme.bodyMedium
+        ?.copyWith(color: darkColorScheme.onSurfaceVariant),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: darkColorScheme.surface,
-    titleTextStyle: darkTextTheme.headlineSmall?.copyWith(color: darkColorScheme.onSurface),
-    contentTextStyle: darkTextTheme.bodyLarge?.copyWith(color: darkColorScheme.onSurface),
+    titleTextStyle:
+        darkTextTheme.headlineSmall?.copyWith(color: darkColorScheme.onSurface),
+    contentTextStyle:
+        darkTextTheme.bodyLarge?.copyWith(color: darkColorScheme.onSurface),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: darkColorScheme.primary,
-      foregroundColor: darkColorScheme.onPrimary
-  ),
+      foregroundColor: darkColorScheme.onPrimary),
 );

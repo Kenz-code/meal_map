@@ -39,6 +39,7 @@ dependencies:
   go_router: ^15.1.2
   intl: ^0.20.2
   google_nav_bar: ^5.0.7
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

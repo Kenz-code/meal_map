@@ -13,7 +13,7 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
 
-  String _selectedCategory = 'Produce';
+  String? _selectedCategory;
 
   final List<String> _categories = [
     'Produce',
@@ -28,7 +28,7 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
     if (_formKey.currentState!.validate()) {
       final newItem = GroceryItem(
         name: _nameController.text.trim(),
-        category: _selectedCategory,
+        category: _selectedCategory!,
       );
       context.pop(newItem);
     }
@@ -69,11 +69,11 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
                 value: _selectedCategory,
                 items: _categories
                     .map((cat) => DropdownMenuItem(
-                  value: cat,
-                  child: Text(cat, style: theme.textTheme.bodyLarge),
-                ))
+                          value: cat,
+                          child: Text(cat, style: theme.textTheme.bodyLarge),
+                        ))
                     .toList(),
-                decoration: InputDecoration(labelText: 'Category',),
+                hint: Text("Select category"),
                 onChanged: (val) {
                   if (val != null) setState(() => _selectedCategory = val);
                 },

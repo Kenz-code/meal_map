@@ -3,8 +3,13 @@ import 'package:meal_map/routes/app_router.dart';
 import 'app/app.dart';
 import 'package:provider/provider.dart';
 import 'app/app_provider.dart';
+import 'core/services/shared_prefs_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SharedPrefsService.init();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -18,10 +23,10 @@ void main() {
       builder: (context, appState, _) {
         final router = createRouter(appState);
 
-        return MyApp(router: router,);
+        return MyApp(
+          router: router,
+        );
       },
     ),
   ));
 }
-
-
