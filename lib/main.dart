@@ -4,9 +4,15 @@ import 'app/app.dart';
 import 'package:provider/provider.dart';
 import 'app/app_provider.dart';
 import 'core/services/shared_prefs_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   await SharedPrefsService.init();
 

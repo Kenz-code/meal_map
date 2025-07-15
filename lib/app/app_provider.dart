@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:meal_map/core/theme/theme.dart';
 import 'dart:async';
 
@@ -32,12 +33,9 @@ class AppStateNotifier extends ChangeNotifier {
   Future<void> _init() async {
     // final prefs = await SharedPreferences.getInstance();
     // _isFirstLaunch = prefs.getBool('seenOnboarding') ?? true;
-    //
-    // // Simulate checking login status
-    // await Future.delayed(Duration(milliseconds: 500));
-    // _isLoggedIn = false; // Replace with real authentication check
     _isFirstLaunch = false;
-    _isLoggedIn = true;
+
+    _isLoggedIn = AuthService().isLoggedIn();
 
     _initialized = true;
     notifyListeners();

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "31322581563",
+    "project_id": "mealmapapp",
+    "storage_bucket": "mealmapapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31322581563:android:eb8d0e747c9c5b689dca1e",
+        "android_client_info": {
+          "package_name": "com.kenbodev.mealmap.meal_map"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhXRu1urDr9DfU23xMyXqblQ-yEUo1t4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

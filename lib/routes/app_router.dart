@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:meal_map/app/app.dart';
 import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/widgets/scaffold_with_nav_bar.dart';
+import 'package:meal_map/features/auth/screens/login_page.dart';
+import 'package:meal_map/features/auth/screens/signup_page.dart';
 import 'package:meal_map/features/grocery/screens/add_grocery_page.dart';
 import 'package:meal_map/features/grocery/screens/grocery_page.dart';
 import 'package:meal_map/features/home/screens/create_meal_page.dart';
@@ -64,11 +66,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       ),
       GoRoute(
         path: '/auth/login',
-        builder: (context, state) => MyHomePage(title: "awesome"),
+        builder: (context, state) => LoginPage(),
       ),
       GoRoute(
         path: '/auth/signup',
-        builder: (context, state) => MyHomePage(title: "awesome"),
+        builder: (context, state) => SignupPage(),
       ),
       StatefulShellRoute.indexedStack(
         // builder: (context, state, shell) => ScaffoldWithNavBar(navigationShell: shell),

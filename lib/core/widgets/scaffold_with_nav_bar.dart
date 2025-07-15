@@ -17,11 +17,15 @@ class ScaffoldWithNavBar extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).brightness == Brightness.light
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.surfaceContainerLow,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black.withOpacity(.1)
+                  : Colors.transparent,
             )
           ],
         ),
@@ -40,7 +44,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
               duration: Duration(milliseconds: 400),
               tabBackgroundColor: Theme.of(context).colorScheme.primary,
               color: Theme.of(context).colorScheme.onSurface,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: Colors.transparent,
               tabs: [
                 GButton(
                   icon: Icons.restaurant,
