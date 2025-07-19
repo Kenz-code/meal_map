@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meal_map/core/extensions/context_theme_extensions.dart';
+import 'package:meal_map/core/extensions/string_casing_extension.dart';
+import 'package:meal_map/core/widgets/bottom_sheet_helper.dart';
 import 'package:meal_map/features/home/models/meal_plan_ui.dart';
 import 'package:meal_map/features/home/models/meal_ui.dart';
 import 'package:meal_map/features/home/widgets/meal_row.dart';
@@ -30,8 +33,42 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
     return DateFormat('EEEE, MMMM d').format(date);
   }
 
-  void _editDay(int dayIndex) {
-    debugPrint('Edit for day $dayIndex');
+  void _editDay(MealTypes mealType) {
+    BottomSheetHelper.show(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.edit_rounded),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.delete_rounded),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            widget.mealPlan.getMeal(mealType)!.name,
+            style: context.textTheme.titleLarge,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            mealType.name.capitalizeFirst(),
+            style: context.textTheme.labelLarge,
+          ),
+        ],
+      ),
+    );
   }
 
   bool dateIsNow() {
@@ -120,19 +157,19 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
                   MealRow(
                     mealLabel: "Breakfast",
                     meal: widget.mealPlan.breakfast,
-                    onLongPress: () => _editDay(widget.index),
+                    onLongPress: () => _editDay(MealTypes.breakfast),
                   ),
                   const SizedBox(height: 8),
                   MealRow(
                     mealLabel: "Lunch",
                     meal: widget.mealPlan.lunch,
-                    onLongPress: () => _editDay(widget.index),
+                    onLongPress: () => _editDay(MealTypes.lunch),
                   ),
                   const SizedBox(height: 8),
                   MealRow(
                     mealLabel: "Dinner",
                     meal: widget.mealPlan.dinner,
-                    onLongPress: () => _editDay(widget.index),
+                    onLongPress: () => _editDay(MealTypes.dinner),
                   ),
                 ],
               ),
@@ -148,12 +185,9 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
                 return Column(
                   children: [
                     MealRow(
-                      mealLabel: MealTypes.values[index].name
-                              .toString()[0]
-                              .toUpperCase() +
-                          MealTypes.values[index].name.toString().substring(1),
+                      mealLabel: MealTypes.values[index].name.capitalizeFirst(),
                       meal: widget.mealPlan.getMeal(MealTypes.values[index]),
-                      onLongPress: () => _editDay(widget.index),
+                      onLongPress: () => _editDay(MealTypes.values[index]),
                     ),
                     MealTypes.values[index] != MealTypes.dinner
                         ? SizedBox(

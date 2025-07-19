@@ -1,1 +1,7 @@
+TODO:
+-open bottom sheet upon long pressing a meal
+-create simple settings page with a theme toggle and log out function
+-create logo
+
+DONE:
 -create dropdown effect for each day in the meals page
