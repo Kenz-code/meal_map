@@ -66,7 +66,7 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 items: _categories
                     .map((cat) => DropdownMenuItem(
                           value: cat,

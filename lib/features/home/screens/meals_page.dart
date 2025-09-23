@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
 
   String _formatDate(DateTime date) {
     // e.g. Monday, May 27, 2025
-    return DateFormat('EEEE, MMMM d').format(date);
+    return DateFormat('EEEE, MMM d').format(date);
   }
 
   void _onNewMealPressed() async {

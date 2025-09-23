@@ -147,7 +147,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
             Text('Meal Type', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             DropdownButtonFormField<String>(
-              value: _mealType,
+              initialValue: _mealType,
               hint: const Text('Select meal type'),
               items: mealTypes
                   .map((type) =>

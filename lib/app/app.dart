@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               SizedBox(height: 8,),
 
-              ElevatedButton(onPressed: () {}, child: Text("Button")),
+              ElevatedButton(onPressed: () {Provider.of<AppStateNotifier>(context, listen: false).logout();}, child: Text("Logout")),
 
               SizedBox(height: 8,),
 

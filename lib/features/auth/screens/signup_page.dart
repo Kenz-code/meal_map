@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 
@@ -42,6 +43,10 @@ class SignupPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(
+                  child: Image.asset("assets/logo/mealmaplogo_Transparent_png.png")
+                ),
+                SizedBox(height: 16,),
                 Text(
                   "Sign up",
                   style: Theme.of(context).textTheme.titleMedium,

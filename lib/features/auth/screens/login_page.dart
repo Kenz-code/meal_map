@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 
@@ -40,8 +41,23 @@ class LoginPage extends StatelessWidget {
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(child: SizedBox()),
+                    Flexible(
+                      flex: 4,
+                      child: Image.asset(
+                        "assets/logo/mealmaplogo_Transparent_png.png",
+                        color: Colors.white,
+                      ),
+                    ),
+                    Flexible(child: SizedBox()),
+                  ],
+                ),
+                SizedBox(height: 16,),
                 Text(
                   "Log in",
                   style: Theme.of(context).textTheme.titleMedium,
