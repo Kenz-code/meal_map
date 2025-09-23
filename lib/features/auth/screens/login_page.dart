@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -12,10 +14,14 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   Future<void> _onLoginPressed(context) async {
+
+    final messenger = ScaffoldMessenger.of(context);
+    final provider = Provider.of<AppStateNotifier>(context, listen: false);
+
     if (_formKey.currentState!.validate()) {
       String? result = await AuthService().login(_email!, _password!);
       if (result != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(
             result,
             style: Theme.of(context)
@@ -26,7 +32,7 @@ class LoginPage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.error,
         ));
       } else {
-        GoRouter.of(context).go("/meals");
+        provider.login();
       }
     }
   }
@@ -43,21 +49,13 @@ class LoginPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(child: SizedBox()),
-                    Flexible(
-                      flex: 4,
-                      child: Image.asset(
-                        "assets/logo/mealmaplogo_Transparent_png.png",
-                        color: Colors.white,
-                      ),
-                    ),
-                    Flexible(child: SizedBox()),
-                  ],
+                Center(
+                  child: Text(
+                    "Welcome Back!",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
-                SizedBox(height: 16,),
+                SizedBox(height: 64,),
                 Text(
                   "Log in",
                   style: Theme.of(context).textTheme.titleMedium,

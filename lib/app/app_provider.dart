@@ -55,7 +55,10 @@ class AppStateNotifier extends ChangeNotifier {
   }
 
   void logout() {
+    AuthService().signOut();
+
     _isLoggedIn = false;
+
     notifyListeners();
   }
 }

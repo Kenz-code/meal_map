@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
+import 'package:provider/provider.dart';
 
 class SignupPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -12,10 +14,13 @@ class SignupPage extends StatelessWidget {
   SignupPage({super.key});
 
   Future<void> _onSignupPressed(context) async {
+    final provider = Provider.of<AppStateNotifier>(context, listen: false);
+    final messenger = ScaffoldMessenger.of(context);
+
     if (_formKey.currentState!.validate()) {
       String? result = await AuthService().register(_email!, _password!);
       if (result != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(
             result,
             style: Theme.of(context)
@@ -26,7 +31,7 @@ class SignupPage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.error,
         ));
       } else {
-        GoRouter.of(context).go("/meals");
+        provider.login();
       }
     }
   }
@@ -44,9 +49,12 @@ class SignupPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset("assets/logo/mealmaplogo_Transparent_png.png")
+                  child: Text(
+                    "Let's get started!",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
-                SizedBox(height: 16,),
+                SizedBox(height: 64,),
                 Text(
                   "Sign up",
                   style: Theme.of(context).textTheme.titleMedium,
