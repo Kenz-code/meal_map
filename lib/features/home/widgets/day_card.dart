@@ -108,7 +108,7 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
                 if (dateIsNow()) const SizedBox(width: 8),
                 Text(
                   _formatDate(widget.date),
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: isEmptyMealPlan ? Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant) : Theme.of(context).textTheme.titleLarge,
                 ),
                 const Spacer(),
 
