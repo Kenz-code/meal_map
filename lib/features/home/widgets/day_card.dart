@@ -33,6 +33,14 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
     return DateFormat('EEEE, MMMM d').format(date);
   }
 
+  bool isDayInThePast() {
+    DateTime today = DateTime.now();
+    // Remove time part for date-only comparison
+    DateTime cardDate = DateTime(widget.date.year, widget.date.month, widget.date.day);
+    DateTime nowDate = DateTime(today.year, today.month, today.day);
+    return cardDate.isBefore(nowDate);
+  }
+
   void _editDay(MealTypes mealType) {
     BottomSheetHelper.show(
       context: context,
@@ -108,7 +116,7 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
                 if (dateIsNow()) const SizedBox(width: 8),
                 Text(
                   _formatDate(widget.date),
-                  style: isEmptyMealPlan ? Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant) : Theme.of(context).textTheme.titleLarge,
+                  style: isEmptyMealPlan || isDayInThePast() ? Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant) : Theme.of(context).textTheme.titleLarge,
                 ),
                 const Spacer(),
 

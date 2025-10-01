@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       MealPlan mealPlan = MealPlan();
 
       for (final meal in data) {
-        if (meal.dateTime == currentDay) {
+        if (meal.dateTime.month == currentDay.month && meal.dateTime.day == currentDay.day) {
           switch (meal.mealType) {
             case "Breakfast":
               mealPlan.breakfast = Meal(name: meal.mealName, cook: meal.cook);

@@ -29,6 +29,24 @@ class _CreateMealPageState extends State<CreateMealPage> {
 
   final List<String> mealTypes = ['Breakfast', 'Lunch', 'Dinner'];
 
+  Future<bool> checkForOverridingMeals(DateTime date, String mealType) async {
+    bool isThereOverridingMeals = false;
+
+    final allMeals = await MealsLocalDatasource.loadAllMeals();
+
+    for (final meal in allMeals) {
+      if (meal.dateTime.year == date.year &&
+          meal.dateTime.month == date.month &&
+          meal.dateTime.day == date.day &&
+          meal.mealType == mealType
+      ) {
+        isThereOverridingMeals = true;
+      }
+    }
+
+    return isThereOverridingMeals;
+  }
+
   void _pickDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -48,7 +66,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
       _formKey.currentState!.save();
 
       _selectedDate = DateTime(
-          _selectedDate.year, _selectedDate.month, _selectedDate.day, 12, 0);
+          _selectedDate.year, _selectedDate.month, _selectedDate.day, 12, 0, DateTime.now().millisecond);
 
       bool okToSave = true;
       // check if selectedDate is before firstDay or after lastDay and conform with user
@@ -100,6 +118,30 @@ class _CreateMealPageState extends State<CreateMealPage> {
                 ));
       }
 
+      setState(() {
+        saving = true;
+      });
+
+      await checkForOverridingMeals(_selectedDate, _mealType!).then(
+              (isThereOverridingMeals) {
+                if (isThereOverridingMeals) {
+                  okToSave = false;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(
+                        "You can't override existing meals!",
+                        style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Theme.of(context).colorScheme.onError),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                  );
+                }
+              }
+      );
+
       final MealData mealData = MealData(
           mealName: _mealName!,
           mealType: _mealType!,
@@ -108,10 +150,6 @@ class _CreateMealPageState extends State<CreateMealPage> {
           dateTime: _selectedDate);
 
       if (okToSave) {
-        setState(() {
-          saving = true;
-        });
-
         await MealsLocalDatasource.saveMeal(mealData);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -119,6 +157,10 @@ class _CreateMealPageState extends State<CreateMealPage> {
         );
 
         context.pop();
+      } else {
+        setState(() {
+          saving = false;
+        });
       }
     }
   }
