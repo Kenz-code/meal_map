@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
 import 'package:meal_map/features/home/data/meals_local_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 
@@ -150,7 +151,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
           dateTime: _selectedDate);
 
       if (okToSave) {
-        await MealsLocalDatasource.saveMeal(mealData);
+        await MealsFirestoreDatasource().saveMeal(mealData);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Meal created!')),
@@ -241,7 +242,10 @@ class _CreateMealPageState extends State<CreateMealPage> {
               onPressed: !saving ? _submitForm : null,
               child: !saving
                   ? const Text('Save Meal')
-                  : CircularProgressIndicator(),
+                  : Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: CircularProgressIndicator(),
+                  ),
             ),
           ],
         ),

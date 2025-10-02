@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
+import 'package:meal_map/core/services/user_firestore_manager_service.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 
 class MealsFirestoreDatasource {
@@ -9,6 +10,9 @@ class MealsFirestoreDatasource {
 
   // Firebase Auth instance
   final AuthService _auth = AuthService();
+
+  // User Firestore manager
+  final UserFirestoreManagerService _userFirestoreManagerService = UserFirestoreManagerService();
 
   /// Get the current user's UID
   String get _currentUserId => _auth.currentUser?.uid ?? '';
@@ -22,6 +26,7 @@ class MealsFirestoreDatasource {
     if (_currentUserId.isEmpty) {
       throw Exception('User is not authenticated');
     }
+    await _userFirestoreManagerService.ensureUserDocumentExists();
     await _userMealsCollection.doc(mealData.getID()).set(mealData.toMap());
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
 import 'package:meal_map/features/home/data/meals_local_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 import 'package:meal_map/features/home/models/meal_plan_ui.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _futureMeals = MealsLocalDatasource.loadAllMeals();
+    _futureMeals = MealsFirestoreDatasource().loadAllMeals();
     startOfWeek = DateTime.now().weekday == DateTime.monday
         ? DateTime.now()
         : DateTime.now()
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
 
   void _reloadMeals() {
     setState(() {
-      _futureMeals = MealsLocalDatasource.loadAllMeals();
+      _futureMeals = MealsFirestoreDatasource().loadAllMeals();
     });
   }
 
@@ -220,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                   future: _futureMeals,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error loading meals');
                     } else {
