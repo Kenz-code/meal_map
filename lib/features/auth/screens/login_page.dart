@@ -40,84 +40,88 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(
-                  child: Text(
-                    "Welcome Back!",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-                SizedBox(height: 64,),
-                Text(
-                  "Log in",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Email',
-                  ),
-                  validator: (value) => value == null || value.isEmpty
-                      ? 'Please enter your email'
-                      : null,
-                  onChanged: (value) => _email = value,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Password',
-                  ),
-                  validator: (value) => value == null || value.isEmpty
-                      ? 'Please enter a password'
-                      : null,
-                  onChanged: (value) => _password = value,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () => _onLoginPressed(context),
-                      child: Text("Log in")),
-                ),
-                SizedBox(
-                  height: 32,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Don't have an account?"),
-                    SizedBox(
-                      width: 4,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Spacer(),
+                  Center(
+                    child: Text(
+                      "Welcome Back!",
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        context.go('/auth/signup');
-                      },
-                      child: Text(
-                        "Sign up",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(decoration: TextDecoration.underline),
+                  ),
+                  Spacer(),
+                  Text(
+                    "Log in",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Email',
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter your email'
+                        : null,
+                    onChanged: (value) => _email = value,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Password',
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter a password'
+                        : null,
+                    onChanged: (value) => _password = value,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () => _onLoginPressed(context),
+                        child: Text("Log in")),
+                  ),
+                  SizedBox(
+                    height: 32,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Don't have an account?"),
+                      SizedBox(
+                        width: 4,
                       ),
-                    )
-                  ],
-                )
-              ],
+                      GestureDetector(
+                        onTap: () {
+                          context.go('/auth/signup');
+                        },
+                        child: Text(
+                          "Sign up",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(decoration: TextDecoration.underline),
+                        ),
+                      )
+                    ],
+                  ),
+                  Spacer()
+                ],
+              ),
             ),
           ),
         ),

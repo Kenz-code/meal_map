@@ -179,6 +179,7 @@ class _GroceryPageState extends State<GroceryPage> {
         ),
         ...crossedOffItems.map(
               (item) => ListTile(
+                dense: true,
             title: Text(
               item.name,
               style: theme.textTheme.bodyLarge?.copyWith(

@@ -1,7 +1,7 @@
 TODO:
 -open bottom sheet upon long pressing a meal
 -create simple settings page with a theme toggle and log out function
--fix bug that makes no days show up when these aren't any meals
+-convert grocery page to firestore
 
 DONE:
 -create dropdown effect for each day in the meals page
