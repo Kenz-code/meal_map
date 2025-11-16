@@ -159,6 +159,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "foo3",
         onPressed: _onNewMealPressed,
         child: Icon(Icons.add_rounded),
       ),

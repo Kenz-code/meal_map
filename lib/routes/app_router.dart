@@ -10,6 +10,7 @@ import 'package:meal_map/features/grocery/screens/add_grocery_page.dart';
 import 'package:meal_map/features/grocery/screens/grocery_page.dart';
 import 'package:meal_map/features/home/screens/create_meal_page.dart';
 import 'package:meal_map/features/home/screens/meals_page.dart';
+import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
 import 'package:meal_map/features/ideas/screens/ideas_page.dart';
 import 'package:provider/provider.dart';
 
@@ -182,6 +183,42 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
             GoRoute(
               path: '/ideas',
               builder: (context, state) => IdeasPage(),
+              routes: [
+                GoRoute(
+                  path: 'create',
+                  parentNavigatorKey: _rootNavigatorKey, // <— THIS IS IMPORTANT
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const AddIdeasPage(),
+                    reverseTransitionDuration:
+                    const Duration(milliseconds: 150), // faster animation
+                    transitionDuration:
+                    const Duration(milliseconds: 150), // faster animation
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      final fade = CurvedAnimation(
+                          parent: animation, curve: Curves.easeInOut);
+                      final scale =
+                      Tween<double>(begin: 0.95, end: 1.0).animate(fade);
+                      final slide = Tween<Offset>(
+                        begin: const Offset(0, 0.1), // 10% down
+                        end: Offset.zero,
+                      ).animate(fade);
+
+                      return FadeTransition(
+                        opacity: fade,
+                        child: SlideTransition(
+                          position: slide,
+                          child: ScaleTransition(
+                            scale: scale,
+                            child: child,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ]
             )
           ]),
           StatefulShellBranch(routes: [

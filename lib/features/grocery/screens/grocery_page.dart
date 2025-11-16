@@ -212,7 +212,7 @@ class _GroceryPageState extends State<GroceryPage> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const SizedBox.shrink();
           return FloatingActionButton(
-            heroTag: null,
+            heroTag: "foo2",
             onPressed: () => _navigateAndAddGrocery(snapshot.data!),
             child: const Icon(Icons.add_rounded),
           );
