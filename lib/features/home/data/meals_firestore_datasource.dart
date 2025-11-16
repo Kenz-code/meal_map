@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:meal_map/core/services/user_firestore_manager_service.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';

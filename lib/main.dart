@@ -6,6 +6,7 @@ import 'app/app_provider.dart';
 import 'core/services/shared_prefs_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,29 @@ void main() async {
   );
 
   await SharedPrefsService.init();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]).then((value) => runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AppStateNotifier(),
+      ),
+    ],
+    child: Consumer<AppStateNotifier>(
+      builder: (context, appState, _) {
+        final router = createRouter(appState);
+
+        return MyApp(
+          router: router,
+        );
+      },
+    ),
+  )));
 
   runApp(MultiProvider(
     providers: [

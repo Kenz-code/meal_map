@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meal_map/features/grocery/data/grocery_firestore_datasource.dart';
+import 'package:meal_map/features/grocery/models/grocery_item.dart';
 
 class GroceryPage extends StatefulWidget {
   const GroceryPage({super.key});
 
   @override
   State<GroceryPage> createState() => _GroceryPageState();
-}
-
-class GroceryItem {
-  final String name;
-  final String category;
-  bool crossedOff;
-
-  GroceryItem({
-    required this.name,
-    required this.category,
-    this.crossedOff = false,
-  });
 }
 
 class _GroceryPageState extends State<GroceryPage> {
@@ -30,81 +20,57 @@ class _GroceryPageState extends State<GroceryPage> {
     'Pantry',
   ];
 
-  late Map<String, List<GroceryItem>> categoryItems;
-  late List<GroceryItem> crossedOffItems;
+  late Future<Map<String, List<GroceryItem>>> _itemsFuture;
+  List<GroceryItem> crossedOffItems = [];
 
   @override
   void initState() {
     super.initState();
+    _itemsFuture = _fetchGroceryItems();
+  }
 
-    categoryItems = {
-      'Produce': [
-        GroceryItem(name: 'Apples', category: 'Produce'),
-        GroceryItem(name: 'Bananas', category: 'Produce'),
-        GroceryItem(name: 'Carrots', category: 'Produce'),
-      ],
-      'Dairy': [
-        GroceryItem(name: 'Milk', category: 'Dairy'),
-        GroceryItem(name: 'Cheese', category: 'Dairy'),
-        GroceryItem(name: 'Yogurt', category: 'Dairy'),
-      ],
-      'Meat': [
-        GroceryItem(name: 'Chicken Breast', category: 'Meat'),
-        GroceryItem(name: 'Ground Beef', category: 'Meat'),
-      ],
-      'Bakery': [
-        GroceryItem(name: 'Bread', category: 'Bakery'),
-        GroceryItem(name: 'Bagels', category: 'Bakery'),
-      ],
-      'Beverages': [
-        GroceryItem(name: 'Orange Juice', category: 'Beverages'),
-        GroceryItem(name: 'Coffee', category: 'Beverages'),
-      ],
-      'Pantry': [
-        GroceryItem(name: 'Rice', category: 'Pantry'),
-        GroceryItem(name: 'Pasta', category: 'Pantry'),
-        GroceryItem(name: 'Olive Oil', category: 'Pantry'),
-      ],
+  Future<Map<String, List<GroceryItem>>> _fetchGroceryItems() async {
+    final allItems = await GroceryFirestoreDatasource().loadAllGroceries();
+
+    final Map<String, List<GroceryItem>> categoryMap = {
+      for (var c in categories) c: [],
     };
 
-    crossedOffItems = [];
-  }
+    final crossedOff = <GroceryItem>[];
 
-  void _crossOffItem(GroceryItem item) {
-    setState(() {
-      categoryItems[item.category]!.remove(item);
-      item.crossedOff = true;
-
-      crossedOffItems.insert(0, item);
-
-      if (crossedOffItems.length > 10) {
-        crossedOffItems.removeLast();
+    for (var item in allItems) {
+      if (item.crossedOff) {
+        crossedOff.add(item);
+      } else {
+        categoryMap[item.category]!.add(item);
       }
-    });
+    }
+
+    crossedOffItems = crossedOff;
+    return categoryMap;
   }
 
-  Future<void> _restoreItem(GroceryItem item) async {
+  void _crossOffItem(Map<String, List<GroceryItem>> items, GroceryItem item) {
+    setState(() {
+      items[item.category]!.remove(item);
+      item.crossedOff = true;
+      crossedOffItems.insert(0, item);
+      if (crossedOffItems.length > 10) crossedOffItems.removeLast();
+    });
+    
+    GroceryFirestoreDatasource().updateGroceryCrossedOff(item.id, item.crossedOff);
+  }
+
+  Future<void> _restoreItem(Map<String, List<GroceryItem>> items, GroceryItem item) async {
     final theme = Theme.of(context);
     final shouldRestore = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          'Restore Item',
-          style: theme.textTheme.headlineSmall,
-        ),
-        content: Text(
-          'Add "${item.name}" back to ${item.category}?',
-          style: theme.textTheme.bodyMedium,
-        ),
+        title: Text('Restore Item', style: theme.textTheme.headlineSmall),
+        content: Text('Add "${item.name}" back to ${item.category}?', style: theme.textTheme.bodyMedium),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: theme.textTheme.labelLarge),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Restore', style: theme.textTheme.labelLarge),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Restore')),
         ],
       ),
     );
@@ -113,7 +79,7 @@ class _GroceryPageState extends State<GroceryPage> {
       setState(() {
         crossedOffItems.remove(item);
         item.crossedOff = false;
-        categoryItems[item.category]!.add(item);
+        items[item.category]!.add(item);
       });
     }
   }
@@ -125,18 +91,14 @@ class _GroceryPageState extends State<GroceryPage> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       margin: const EdgeInsets.only(bottom: 8),
       color: theme.colorScheme.primary,
-      child: Text(
-        category,
-        style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onPrimary),
-      ),
+      child: Text(category, style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onPrimary)),
     );
   }
 
-  Widget _buildCategorySection(String category, BuildContext context) {
+  Widget _buildCategorySection(Map<String, List<GroceryItem>> items, String category, BuildContext context) {
     final theme = Theme.of(context);
-    final items = categoryItems[category]!;
-
-    if (items.isEmpty) return const SizedBox.shrink();
+    final list = items[category] ?? [];
+    if (list.isEmpty) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -144,12 +106,12 @@ class _GroceryPageState extends State<GroceryPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildCategoryHeader(category, context),
-          ...items.map(
+          ...list.map(
                 (item) => ListTile(
               title: Text(item.name, style: theme.textTheme.bodyLarge),
               trailing: IconButton(
-                icon: Icon(Icons.check_box_outline_blank, color: theme.iconTheme.color),
-                onPressed: () => _crossOffItem(item),
+                icon: const Icon(Icons.check_box_outline_blank),
+                onPressed: () => _crossOffItem(items, item),
               ),
             ),
           ),
@@ -158,28 +120,24 @@ class _GroceryPageState extends State<GroceryPage> {
     );
   }
 
-  Widget _buildCrossedOffSection(BuildContext context) {
+  Widget _buildCrossedOffSection(Map<String, List<GroceryItem>> items, BuildContext context) {
     final theme = Theme.of(context);
-
     if (crossedOffItems.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(thickness: 2),
+        _isItemsMapEmpty(items) ? SizedBox.shrink() : Divider(thickness: 2),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           margin: const EdgeInsets.only(bottom: 8),
           color: theme.colorScheme.primary.withOpacity(0.85),
-          child: Text(
-            'Crossed Off',
-            style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onPrimary),
-          ),
+          child: Text('Crossed Off', style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onPrimary)),
         ),
         ...crossedOffItems.map(
               (item) => ListTile(
-                dense: true,
+            dense: true,
             title: Text(
               item.name,
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -189,46 +147,76 @@ class _GroceryPageState extends State<GroceryPage> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.undo, color: theme.colorScheme.onSurface.withOpacity(0.5)),
-              onPressed: () => _restoreItem(item),
+              onPressed: () => _restoreItem(items, item),
             ),
-            onTap: () => _restoreItem(item),
+            onTap: () => _restoreItem(items, item),
           ),
         ),
       ],
     );
   }
 
-  void _navigateAndAddGrocery() async {
+  void _navigateAndAddGrocery(Map<String, List<GroceryItem>> items) async {
     final GroceryItem? result = await context.push<GroceryItem?>('/grocery/create');
-
     if (result != null) {
       setState(() {
-        categoryItems[result.category]!.add(result);
+        _itemsFuture = _fetchGroceryItems();
       });
     }
+  }
+
+  bool _isItemsMapEmpty(Map<String, List<GroceryItem>> itemsMap) {
+    final itemsList = itemsMap.values.toList();
+    
+    for (final item in itemsList) {
+      if (item.isNotEmpty) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Grocery List'),
+      appBar: AppBar(title: const Text('Grocery List')),
+      body: FutureBuilder<Map<String, List<GroceryItem>>>(
+        future: _itemsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error loading groceries: ${snapshot.error}'));
+          } else if (!snapshot.hasData || (_isItemsMapEmpty(snapshot.data!) && crossedOffItems.isEmpty)) {
+            return const Center(child: Text('No groceries found.'));
+          }
+
+          final items = snapshot.data!;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...categories.map((cat) => _buildCategorySection(items, cat, context)),
+                const SizedBox(height: 32),
+                _buildCrossedOffSection(items, context),
+              ],
+            ),
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: null,
-        onPressed: () => _navigateAndAddGrocery(),
-        child: Icon(Icons.add_rounded),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...categories.map((cat) => _buildCategorySection(cat, context)),
-            const SizedBox(height: 32),
-            _buildCrossedOffSection(context),
-          ],
-        ),
+      floatingActionButton: FutureBuilder<Map<String, List<GroceryItem>>>(
+        future: _itemsFuture,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          return FloatingActionButton(
+            heroTag: null,
+            onPressed: () => _navigateAndAddGrocery(snapshot.data!),
+            child: const Icon(Icons.add_rounded),
+          );
+        },
       ),
     );
   }

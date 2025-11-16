@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
-import 'package:meal_map/features/home/data/meals_local_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 import 'package:meal_map/features/home/models/meal_plan_ui.dart';
 import 'package:meal_map/features/home/models/meal_ui.dart';
@@ -178,16 +177,14 @@ class _HomePageState extends State<HomePage> {
                           iconSize: 16,
                           icon: Icon(Icons.arrow_back_ios_rounded),
                         )
-                      : SizedBox(
-                          width: 32,
-                        ),
+                      : SizedBox.shrink(),
                   Row(
                     children: [
                       startOfThisWeek == startOfWeek
                           ? Container(
                               width: 16,
                               height: 16,
-                              margin: EdgeInsets.all(8),
+                              margin: EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
                                 shape: BoxShape.circle,

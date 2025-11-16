@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/app/app.dart';
@@ -9,6 +10,7 @@ import 'package:meal_map/features/grocery/screens/add_grocery_page.dart';
 import 'package:meal_map/features/grocery/screens/grocery_page.dart';
 import 'package:meal_map/features/home/screens/create_meal_page.dart';
 import 'package:meal_map/features/home/screens/meals_page.dart';
+import 'package:meal_map/features/ideas/screens/ideas_page.dart';
 import 'package:provider/provider.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -34,8 +36,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
           fullPath.startsWith('/ideas') ||
           fullPath.startsWith('/settings');
 
-      print(
+      if (kDebugMode) {
+        print(
           "Redirect check: isLoggedIn=$isLoggedIn, isFirstLaunch=$isFirstLaunch, fullPath=$fullPath");
+      }
 
       // Redirect to onboarding if needed
       if (isFirstLaunch && !goingToOnboarding) {
@@ -177,7 +181,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/ideas',
-              builder: (context, state) => MyHomePage(title: "awesome"),
+              builder: (context, state) => IdeasPage(),
             )
           ]),
           StatefulShellBranch(routes: [

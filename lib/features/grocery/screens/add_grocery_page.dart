@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meal_map/features/grocery/data/grocery_firestore_datasource.dart';
+import 'package:meal_map/features/grocery/models/grocery_item.dart';
 import 'package:meal_map/features/grocery/screens/grocery_page.dart';
 
 class AddGroceryPage extends StatefulWidget {
@@ -13,7 +15,9 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
 
-  String? _selectedCategory;
+  bool isSaving = false;
+
+  String _selectedCategory = 'Produce';
 
   final List<String> _categories = [
     'Produce',
@@ -24,14 +28,27 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
     'Pantry',
   ];
 
-  void _submitItem() {
+  void _submitItem() async {
+    final navigator = Navigator.of(context);
+
     if (_formKey.currentState!.validate()) {
+      toggleIsSaving();
+
       final newItem = GroceryItem(
         name: _nameController.text.trim(),
-        category: _selectedCategory!,
+        category: _selectedCategory,
       );
-      context.pop(newItem);
+
+      await GroceryFirestoreDatasource().saveGrocery(newItem);
+
+      navigator.pop(newItem);
     }
+  }
+
+  void toggleIsSaving() {
+    setState(() {
+      isSaving = !isSaving;
+    });
   }
 
   @override
@@ -45,7 +62,7 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Grocery Item'),
+        title: Text('Add Grocery'),
         elevation: 0,
       ),
       body: SafeArea(
@@ -84,7 +101,10 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _submitItem,
-                    child: Text('Add Item'),
+                    child: !isSaving ? Text('Add Item') : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary,),
+                    ),
                   ),
                 ),
               ],
