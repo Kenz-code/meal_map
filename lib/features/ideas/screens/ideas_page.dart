@@ -37,13 +37,23 @@ class _IdeasPageState extends State<IdeasPage> {
         title: const Text("Meal Ideas"),
         centerTitle: true,
       ),
-      body: ListView(
-        children: ideaBank.map((i) {
-          return ListTile(
-            title: Text(i.idea),
-            subtitle: Text("${i.type} • ${i.person}"),
+      body: Builder(
+        builder: (context) {
+          if (ideaBank.isEmpty) {
+            return Center(
+              child: Text("Press + to add a meal idea"),
+            );
+          }
+
+          return ListView(
+            children: ideaBank.map((i) {
+              return ListTile(
+                title: Text(i.idea),
+                subtitle: Text("${i.type} • ${i.person}"),
+              );
+            }).toList(),
           );
-        }).toList(),
+        }
       ),
 
       floatingActionButton: FloatingActionButton(
