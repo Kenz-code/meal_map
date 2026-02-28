@@ -61,7 +61,7 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
             ],
           ),
           SizedBox(
-            height: 16,
+            height: 8,
           ),
           Text(
             widget.mealPlan.getMeal(mealType)!.name,

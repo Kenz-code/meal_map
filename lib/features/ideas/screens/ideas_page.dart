@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
 import 'package:meal_map/features/ideas/models/meal_idea.dart';
 import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
+import 'package:meal_map/features/ideas/widgets/meal_idea_tile.dart';
 
 class IdeasPage extends StatefulWidget {
   const IdeasPage({super.key});
@@ -47,10 +48,7 @@ class _IdeasPageState extends State<IdeasPage> {
 
           return ListView(
             children: ideaBank.map((i) {
-              return ListTile(
-                title: Text(i.idea),
-                subtitle: Text("${i.type} • ${i.person}"),
-              );
+              return MealIdeaTile(mealIdea: i,);
             }).toList(),
           );
         }

@@ -23,4 +23,28 @@ class IdeasLocalDatasource {
       return MealIdea.fromMap(decoded);
     }).toList();
   }
+
+  static Future<void> deleteMealIdea(String _id) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> list = prefs.getStringList(_key) ?? [];
+
+    List<MealIdea> decodedList = list.map((e) {
+      final decoded = jsonDecode(e);
+      return MealIdea.fromMap(decoded);
+    }).toList();
+
+    for (final idea in decodedList) {
+      if (idea.id == _id) {
+        int index = decodedList.indexOf(idea);
+        list.removeAt(index);
+      }
+    }
+
+    await prefs.setStringList(_key, list);
+  }
+
+  static Future<void> clearMealIdeaDatabase() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
+  }
 }

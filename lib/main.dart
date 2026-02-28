@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
 import 'package:meal_map/routes/app_router.dart';
 import 'app/app.dart';
 import 'package:provider/provider.dart';
