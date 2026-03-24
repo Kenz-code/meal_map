@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // file with open ai key
   await dotenv.load(fileName: "main.env");
 
   await Firebase.initializeApp(

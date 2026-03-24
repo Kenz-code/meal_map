@@ -18,6 +18,7 @@ class _GroceryPageState extends State<GroceryPage> {
     'Bakery',
     'Beverages',
     'Pantry',
+    'On Sale',
   ];
 
   late Future<Map<String, List<GroceryItem>>> _itemsFuture;

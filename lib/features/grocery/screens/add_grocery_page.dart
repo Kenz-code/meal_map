@@ -1,3 +1,4 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/features/grocery/data/grocery_firestore_datasource.dart';
@@ -26,6 +27,7 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
     'Bakery',
     'Beverages',
     'Pantry',
+    'On Sale',
   ];
 
   void _submitItem() async {
@@ -97,16 +99,10 @@ class _AddGroceryPageState extends State<AddGroceryPage> {
                   },
                 ),
                 const Spacer(),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _submitItem,
-                    child: !isSaving ? Text('Add Item') : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary,),
-                    ),
-                  ),
-                ),
+                ElevatedButton(
+                  onPressed: !isSaving ? _submitItem : null,
+                  child: Text('Add Item')
+                ).sizedWidth(double.infinity),
               ],
             ),
           ),
