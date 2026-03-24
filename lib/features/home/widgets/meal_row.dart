@@ -19,6 +19,7 @@ class MealRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('$mealLabel:',
                 style: meal?.name != null

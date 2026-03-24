@@ -79,7 +79,7 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
     } catch (e) {
       // Handle error gracefully
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to generate ideas: $e")),
+        SnackBar(content: Text("Failed to generate ideas: ${e}")),
       );
     } finally {
       setState(() => _isLoading = false);
