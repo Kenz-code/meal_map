@@ -1,4 +1,6 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 // Note: Assuming your imports for services and data remain correct.
 import 'package:meal_map/core/services/meal_idea_api_service.dart';
 import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
@@ -11,16 +13,18 @@ class AddIdeasPage extends StatefulWidget {
   State<AddIdeasPage> createState() => _AddIdeasPageState();
 }
 
-class _AddIdeasPageState extends State<AddIdeasPage> {
+class _AddIdeasPageState extends State<AddIdeasPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   late FocusNode _promptTextFieldFocusNode;
+  late TabController _tabController;
 
   String? manualIdea;
   String? prompt;
   String selectedType = "Breakfast";
   String person = "";
   String notes = "";
-  bool _isLoading = false; // New state for loading indicator
+  bool _isLoading = false;
 
   List<String> generatedIdeas = [];
 
@@ -28,12 +32,14 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
   void initState() {
     super.initState();
     _promptTextFieldFocusNode = FocusNode();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    // Clean up the focus node when the Form is disposed.
     _promptTextFieldFocusNode.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -41,7 +47,7 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
 
   Future<void> _saveMealIdea(String idea) async {
     if (!_formKey.currentState!.validate()) {
-      return; // Ensure the common fields (like person's name) are validated
+      return;
     }
 
     final newIdea = MealIdea(
@@ -64,7 +70,7 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
     }
 
     await _saveMealIdea(manualIdea!);
-    Navigator.pop(context); // Go back to main page
+    Navigator.pop(context);
   }
 
   Future<void> _generateIdeas() async {
@@ -77,7 +83,6 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
       final ideas = await MealIdeaApiService.getMealIdeas(prompt!);
       setState(() => generatedIdeas = ideas);
     } catch (e) {
-      // Handle error gracefully
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to generate ideas: ${e}")),
       );
@@ -96,60 +101,33 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverAppBar(
-                  title: const Text("Add Meal Ideas"),
-                  pinned: true,
-                  bottom: const TabBar(
-                    tabs: [
-                      Tab(icon: Icon(Icons.edit), text: "Manual Idea"),
-                      Tab(icon: Icon(Icons.rocket_launch), text: "AI Generator"),
-                    ],
-                  ),
-                ),
-
-                // 🔽 Shared content that scrolls with the tabs
-                SliverToBoxAdapter(
-                  child: Form(
-                    key: _formKey,
-                    child: _buildSharedFormFields(),
-                  ),
-                ),
-              ];
-            },
-            body: TabBarView(
-              children: [
-                // 👇 Manual tab (same State, scrollable)
-                CustomScrollView(
-                  shrinkWrap: true,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: _buildManualInput(),
-                    ),
-                  ],
-                ),
-
-                // 👇 AI tab (setState works here)
-                CustomScrollView(
-                  shrinkWrap: true,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: _buildAIGenerator(),
-                    ),
-                  ],
-                ),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Add Meal Ideas")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(icon: Icon(Icons.edit), text: "Manual Idea"),
+                Tab(icon: Icon(Icons.rocket_launch), text: "AI Generator"),
               ],
             ),
-          ),
+            Form(
+              key: _formKey,
+              child: _buildSharedFormFields(),
+            ),
+            IndexedStack(
+              index: _tabController.index,
+              children: [
+                _buildManualInput(),
+                _buildAIGenerator(),
+              ],
+            ),
+          ],
         ),
-      ),
+      ).safeArea(),
     );
   }
 
@@ -169,7 +147,6 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
           },
         ),
         const SizedBox(height: 12),
-
         DropdownButtonFormField<String>(
           decoration: const InputDecoration(labelText: "Meal Type"),
           value: selectedType,
@@ -178,9 +155,7 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
               .toList(),
           onChanged: (val) => setState(() => selectedType = val!),
         ),
-
         const SizedBox(height: 12),
-
         TextFormField(
           decoration: const InputDecoration(labelText: "Notes"),
           initialValue: notes,
@@ -215,6 +190,7 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
           onPressed: _saveManualIdea,
           child: const Text("Save Manual Idea"),
         ),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -254,15 +230,13 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
-                child: const Text("Generated Ideas:",
-                    style:
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  "Generated Ideas:",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
               ...generatedIdeas.map((idea) {
-                print(idea);
-
                 return Card(
-                  // Visually distinguish generated ideas
                   margin: const EdgeInsets.symmetric(vertical: 4),
                   child: ListTile(
                     title: Text(idea),
@@ -275,13 +249,12 @@ class _AddIdeasPageState extends State<AddIdeasPage> {
                 );
               }).toList(),
             ],
-          )
+          ),
+        const SizedBox(height: 16),
       ],
     );
   }
 }
-
-
 
 class _AnimatedAddToCheck extends StatefulWidget {
   final Future<void> Function() onAdd;
@@ -341,12 +314,14 @@ class _AnimatedAddToCheckState extends State<_AnimatedAddToCheck>
         animation: _controller,
         builder: (context, child) {
           return Transform.rotate(
-            angle: _rotation.value * 3.14159 * 2, // convert turns → radians
+            angle: _rotation.value * 3.14159 * 2,
             child: Transform.scale(
               scale: _scale.value,
               child: Icon(
                 _checked ? Icons.check_circle : Icons.add_circle,
-                color: _checked ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                color: _checked
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 size: 28,
               ),
             ),

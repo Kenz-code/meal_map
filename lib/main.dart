@@ -1,6 +1,7 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
 import 'package:meal_map/routes/app_router.dart';
 import 'app/app.dart';
 import 'package:provider/provider.dart';
@@ -25,43 +26,46 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
-  ]).then((value) => runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (_) => ThemeProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => AppStateNotifier(),
-      ),
-    ],
-    child: Consumer<AppStateNotifier>(
-      builder: (context, appState, _) {
-        final router = createRouter(appState);
+  ]).then((value) => runApp(DevicePreview(
+    enabled: false,
+    builder: (context) => MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AppStateNotifier(),
+        ),
+      ],
+      child: Consumer<AppStateNotifier>(
+        builder: (context, appState, _) {
+          final router = createRouter(appState);
 
-        return MyApp(
-          router: router,
-        );
-      },
+          return MyApp(
+            router: router,
+          );
+        },
+      ),
     ),
   )));
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (_) => ThemeProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => AppStateNotifier(),
-      ),
-    ],
-    child: Consumer<AppStateNotifier>(
-      builder: (context, appState, _) {
-        final router = createRouter(appState);
-
-        return MyApp(
-          router: router,
-        );
-      },
-    ),
-  ));
+  // runApp(MultiProvider(
+  //   providers: [
+  //     ChangeNotifierProvider(
+  //       create: (_) => ThemeProvider(),
+  //     ),
+  //     ChangeNotifierProvider(
+  //       create: (_) => AppStateNotifier(),
+  //     ),
+  //   ],
+  //   child: Consumer<AppStateNotifier>(
+  //     builder: (context, appState, _) {
+  //       final router = createRouter(appState);
+  //
+  //       return MyApp(
+  //         router: router,
+  //       );
+  //     },
+  //   ),
+  // ));
 }

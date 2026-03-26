@@ -68,6 +68,7 @@ class SignupPage extends StatelessWidget {
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please enter your email'
                         : null,

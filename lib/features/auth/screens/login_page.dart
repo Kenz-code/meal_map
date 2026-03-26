@@ -69,6 +69,7 @@ class LoginPage extends StatelessWidget {
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please enter your email'
                         : null,
@@ -78,6 +79,7 @@ class LoginPage extends StatelessWidget {
                     height: 16,
                   ),
                   TextFormField(
+                    obscureText: true,
                     decoration: const InputDecoration(
                       hintText: 'Password',
                     ),

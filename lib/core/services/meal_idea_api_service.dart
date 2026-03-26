@@ -20,9 +20,16 @@ class MealIdeaApiService {
         "model": "llama-3.1-8b-instant",
         "messages": [
           {
-            "role": "user",
+            "role": "system",
             "content":
-            "You are a meal-planning assistant. Give me 5 meal ideas based on the request below. Return ONLY the meal names, each meal name separated by one comma and one space (normal english grammar), with no numbering, no bullets, and no extra text. Request: {$prompt}"
+            "You are a meal-planning assistant. When asked for meal ideas, "
+                "respond with exactly 5 meal names — one per line, numbered 1 to 5 "
+                "in the format '1. Meal Name'. No extra text, no descriptions, "
+                "no blank lines, nothing before or after the list.",
+          },
+          {
+            "role": "user",
+            "content": prompt,
           }
         ]
       }),
@@ -35,6 +42,11 @@ class MealIdeaApiService {
     final data = jsonDecode(response.body);
     final String text = data["choices"][0]["message"]["content"];
 
-    return text.split(", ");
+    return text
+        .trim()
+        .split('\n')
+        .map((line) => line.replaceFirst(RegExp(r'^\d+\.\s*'), '').trim())
+        .where((line) => line.isNotEmpty)
+        .toList();
   }
 }
