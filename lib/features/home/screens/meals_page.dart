@@ -73,13 +73,13 @@ class _HomePageState extends State<HomePage> {
         if (meal.dateTime.month == currentDay.month && meal.dateTime.day == currentDay.day) {
           switch (meal.mealType) {
             case "Breakfast":
-              mealPlan.breakfast = Meal(name: meal.mealName, cook: meal.cook);
+              mealPlan.breakfast = meal;
               break;
             case "Lunch":
-              mealPlan.lunch = Meal(name: meal.mealName, cook: meal.cook);
+              mealPlan.lunch = meal;
               break;
             case "Dinner":
-              mealPlan.dinner = Meal(name: meal.mealName, cook: meal.cook);
+              mealPlan.dinner = meal;
               break;
           }
         }
@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> {
       DayCard dayCard = DayCard(
           date: currentDay,
           mealPlan: mealPlan,
+          refresh: _reloadMeals,
           index: weekdayIndex(currentDay));
 
       formattedMeals.add(dayCard);

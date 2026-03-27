@@ -204,7 +204,7 @@ class _IdeasPageState extends State<IdeasPage> {
             onRefresh: _onRefresh,
             child: ListView(
               children: filteredIdeas.map((i) {
-                return MealIdeaTile(mealIdea: i,);
+                return MealIdeaTile(mealIdea: i, refresh: _onRefresh,);
               }).toList(),
             ),
           );

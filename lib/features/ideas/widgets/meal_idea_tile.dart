@@ -10,7 +10,8 @@ import 'package:meal_map/features/ideas/models/meal_idea.dart';
 
 class MealIdeaTile extends StatefulWidget {
   final MealIdea mealIdea;
-  const MealIdeaTile({Key? key, required this.mealIdea}) : super(key: key);
+  final VoidCallback refresh;
+  const MealIdeaTile({Key? key, required this.mealIdea, required this.refresh}) : super(key: key);
 
   @override
   _MealIdeaTileState createState() => _MealIdeaTileState();
@@ -30,6 +31,7 @@ class _MealIdeaTileState extends State<MealIdeaTile> {
 
     if (shouldDelete == true) {
       context.pop();
+      widget.refresh.call();
     }
   }
 
@@ -60,7 +62,7 @@ class _MealIdeaTileState extends State<MealIdeaTile> {
           ),
           Text(
             "${widget.mealIdea.type.capitalizeFirst()} • ${widget.mealIdea.person}",
-            style: context.textTheme.labelLarge,
+            style: context.textTheme.labelMedium,
           ),
 
           24.gapHeight,

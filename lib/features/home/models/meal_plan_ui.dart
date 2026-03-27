@@ -1,15 +1,15 @@
-import 'meal_ui.dart';
+import 'package:meal_map/features/home/models/meal_data.dart';
 
 enum MealTypes { breakfast, lunch, dinner }
 
 class MealPlan {
-  Meal? breakfast;
-  Meal? lunch;
-  Meal? dinner;
+  MealData? breakfast;
+  MealData? lunch;
+  MealData? dinner;
 
   MealPlan({this.breakfast, this.lunch, this.dinner});
 
-  Meal? getMeal(MealTypes type) {
+  MealData? getMeal(MealTypes type) {
     switch (type) {
       case MealTypes.breakfast:
         return breakfast;

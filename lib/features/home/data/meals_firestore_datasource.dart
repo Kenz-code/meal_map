@@ -29,6 +29,18 @@ class MealsFirestoreDatasource {
     await _userMealsCollection.doc(mealData.getID()).set(mealData.toMap());
   }
 
+  Future<void> deleteMeal(String id) async {
+    if (_currentUserId.isEmpty) {
+      throw Exception('User is not authenticated');
+    }
+
+    try {
+      await _userMealsCollection.doc(id).delete();
+    } catch (e) {
+      throw Exception('Failed to delete meal: $e');
+    }
+  }
+
   /// Load a meal from the current user's meals subcollection by ID
   Future<MealData> loadMeal(String id) async {
     if (_currentUserId.isEmpty) {

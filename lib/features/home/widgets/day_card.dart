@@ -1,22 +1,28 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 import 'package:meal_map/core/extensions/string_casing_extension.dart';
 import 'package:meal_map/core/widgets/bottom_sheet_helper.dart';
+import 'package:meal_map/core/widgets/confirm_dialog.dart';
+import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
+import 'package:meal_map/features/home/models/meal_data.dart';
 import 'package:meal_map/features/home/models/meal_plan_ui.dart';
-import 'package:meal_map/features/home/models/meal_ui.dart';
 import 'package:meal_map/features/home/widgets/meal_row.dart';
 
 class DayCard extends StatefulWidget {
   final DateTime date;
   final MealPlan mealPlan;
   final int index;
+  final VoidCallback refresh;
 
   const DayCard({
     super.key,
     required this.date,
     required this.mealPlan,
     required this.index,
+    required this.refresh
   });
 
   @override
@@ -28,6 +34,11 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
 
   final _animationCurve = Curves.easeInOutCubic;
   final _animationDuration = const Duration(milliseconds: 300);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   String _formatDate(DateTime date) {
     return DateFormat('EEEE, MMMM d').format(date);
@@ -41,7 +52,25 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
     return cardDate.isBefore(nowDate);
   }
 
+  Future<void> _onDeletePressed(BuildContext context, MealData mealUi) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => ConfirmDialog(
+        title: 'Delete Meal'.text(),
+        content: "Are you sure you want to delete ${mealUi.mealName}?".text(),
+        onConfirm: () => MealsFirestoreDatasource().deleteMeal(mealUi.getID()),
+      ),
+    );
+
+    if (shouldDelete == true) {
+      context.pop();
+      widget.refresh.call();
+    }
+  }
+
   void _editDay(MealTypes mealType) {
+    final MealData mealUi = widget.mealPlan.getMeal(mealType)!;
+
     BottomSheetHelper.show(
       context: context,
       child: Column(
@@ -56,7 +85,7 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
               ),
               IconButton(
                 icon: Icon(Icons.delete_rounded),
-                onPressed: () {},
+                onPressed: () => _onDeletePressed(context, mealUi),
               ),
             ],
           ),
@@ -64,16 +93,24 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
             height: 8,
           ),
           Text(
-            widget.mealPlan.getMeal(mealType)!.name,
+            mealUi.mealName,
             style: context.textTheme.titleLarge,
           ),
           SizedBox(
             height: 8,
           ),
           Text(
-            mealType.name.capitalizeFirst(),
-            style: context.textTheme.labelLarge,
+            "${mealType.name.capitalizeFirst()} • ${mealUi.cook}",
+            style: context.textTheme.labelMedium,
           ),
+
+          24.gapHeight,
+
+          Text(
+            mealUi.notes ?? "",
+            textAlign: TextAlign.left,
+            style: context.textTheme.bodyMedium!.copyWith(color: context.colorScheme.onSurfaceVariant),
+          ).visibleIf(mealUi.notes != null),
         ],
       ),
     );
@@ -85,9 +122,9 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
   }
 
   bool get isEmptyMealPlan =>
-      widget.mealPlan.breakfast?.name == null &&
-      widget.mealPlan.lunch?.name == null &&
-      widget.mealPlan.dinner?.name == null;
+      widget.mealPlan.breakfast == null &&
+      widget.mealPlan.lunch == null &&
+      widget.mealPlan.dinner == null;
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +225,7 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
           const SizedBox(height: 16),
           Column(
             children: List.generate(MealTypes.values.length, (index) {
-              Meal? meal = widget.mealPlan.getMeal(MealTypes.values[index]);
+              MealData? meal = widget.mealPlan.getMeal(MealTypes.values[index]);
               if (meal != null) {
                 return Column(
                   children: [

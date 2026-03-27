@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:meal_map/features/home/models/meal_ui.dart';
+import 'package:meal_map/features/home/models/meal_data.dart';
 
 class MealRow extends StatelessWidget {
   final String mealLabel;
-  final Meal? meal;
+  final MealData? meal;
   final VoidCallback onLongPress;
 
   const MealRow(
@@ -22,15 +22,15 @@ class MealRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('$mealLabel:',
-                style: meal?.name != null
+                style: meal?.mealName != null
                     ? Theme.of(context).textTheme.labelLarge
                     : Theme.of(context).textTheme.labelLarge!.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                meal?.name ?? '—',
-                style: meal?.name != null
+                meal?.mealName ?? '—',
+                style: meal?.mealName != null
                     ? Theme.of(context).textTheme.bodyLarge
                     : Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant),

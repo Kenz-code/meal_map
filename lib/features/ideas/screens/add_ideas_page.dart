@@ -26,6 +26,7 @@ class _AddIdeasPageState extends State<AddIdeasPage>
   String person = "";
   String notes = "";
   bool _isLoading = false;
+  bool _isManualSaving = false;
 
   List<String> generatedIdeas = [];
 
@@ -70,6 +71,9 @@ class _AddIdeasPageState extends State<AddIdeasPage>
       return;
     }
 
+    setState(() {
+      _isManualSaving = true;
+    });
     await _saveMealIdea(manualIdea!);
     Navigator.pop(context);
   }
@@ -188,7 +192,7 @@ class _AddIdeasPageState extends State<AddIdeasPage>
         ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: _saveManualIdea,
+          onPressed: _isManualSaving ? null : _saveManualIdea,
           child: const Text("Save Manual Idea"),
         ),
         const SizedBox(height: 16),
