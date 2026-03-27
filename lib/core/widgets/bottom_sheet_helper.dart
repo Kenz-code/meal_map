@@ -4,7 +4,7 @@ class BottomSheetHelper {
   static void show({
     required BuildContext context,
     required Widget child,
-    double? height,
+    double? minHeight,
     bool isDismissible = true,
     bool enableDrag = true,
     Color? backgroundColor,
@@ -22,6 +22,8 @@ class BottomSheetHelper {
         final screenHeight = MediaQuery.of(context).size.height;
         final screenWidth = MediaQuery.of(context).size.width;
 
+        final minimumHeight = minHeight ?? screenHeight / 2;
+
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -36,8 +38,8 @@ class BottomSheetHelper {
             ),
             Container(
               width: screenWidth,
-              constraints: BoxConstraints(minHeight: screenHeight / 2),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              constraints: BoxConstraints(minHeight: minimumHeight, maxWidth: screenWidth),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: SingleChildScrollView(
                 child: IntrinsicHeight(
                   child: child,

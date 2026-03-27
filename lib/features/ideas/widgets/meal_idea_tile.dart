@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 import 'package:meal_map/core/extensions/string_casing_extension.dart';
 import 'package:meal_map/core/widgets/bottom_sheet_helper.dart';
-import 'package:meal_map/features/global_widgets/confirm_dialog.dart';
+import 'package:meal_map/core/widgets/confirm_dialog.dart';
 import 'package:meal_map/features/ideas/data/ideas_firestore_datasource.dart';
 import 'package:meal_map/features/ideas/models/meal_idea.dart';
 
@@ -35,7 +35,7 @@ class _MealIdeaTileState extends State<MealIdeaTile> {
 
   void _editIdea() {
     BottomSheetHelper.show(
-      height: widget.mealIdea.notes == "" ? 200 : null,
+      minHeight: widget.mealIdea.notes == "" ? 200 : null,
       context: context,
       child: Column(
         children: [
