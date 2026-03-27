@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 // Note: Assuming your imports for services and data remain correct.
 import 'package:meal_map/core/services/meal_idea_api_service.dart';
+import 'package:meal_map/features/ideas/data/ideas_firestore_datasource.dart';
 import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
 import 'package:meal_map/features/ideas/models/meal_idea.dart';
 
@@ -57,7 +58,7 @@ class _AddIdeasPageState extends State<AddIdeasPage>
       notes: notes.trim(),
     );
 
-    await IdeasLocalDatasource.saveMealIdea(newIdea);
+    await IdeasFirestoreDatasource().saveMealIdea(newIdea);
   }
 
   Future<void> _saveManualIdea() async {

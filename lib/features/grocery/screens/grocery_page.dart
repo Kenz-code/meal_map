@@ -1,3 +1,4 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/features/grocery/data/grocery_firestore_datasource.dart';
@@ -49,6 +50,12 @@ class _GroceryPageState extends State<GroceryPage> {
 
     crossedOffItems = crossedOff;
     return categoryMap;
+  }
+
+  Future<void> _onRefresh() async {
+    setState(() {
+      _itemsFuture = _fetchGroceryItems();
+    });
   }
 
   void _crossOffItem(Map<String, List<GroceryItem>> items, GroceryItem item) {
@@ -195,15 +202,23 @@ class _GroceryPageState extends State<GroceryPage> {
 
           final items = snapshot.data!;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...categories.map((cat) => _buildCategorySection(items, cat, context)),
-                const SizedBox(height: 32),
-                _buildCrossedOffSection(items, context),
-              ],
+          return RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...categories.map((cat) => _buildCategorySection(items, cat, context)),
+                      const SizedBox(height: 32),
+                      _buildCrossedOffSection(items, context),
+                    ],
+                  ).constrainedHeight(min: constraints.maxHeight),
+                );
+              }
             ),
           );
         },

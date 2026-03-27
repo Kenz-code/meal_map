@@ -1,9 +1,11 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 import 'package:meal_map/core/extensions/string_casing_extension.dart';
 import 'package:meal_map/core/widgets/bottom_sheet_helper.dart';
-import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
+import 'package:meal_map/features/global_widgets/confirm_dialog.dart';
+import 'package:meal_map/features/ideas/data/ideas_firestore_datasource.dart';
 import 'package:meal_map/features/ideas/models/meal_idea.dart';
 
 class MealIdeaTile extends StatefulWidget {
@@ -16,13 +18,24 @@ class MealIdeaTile extends StatefulWidget {
 
 class _MealIdeaTileState extends State<MealIdeaTile> {
 
-  void _onDeletePressed() {
-    IdeasLocalDatasource.deleteMealIdea(widget.mealIdea.id);
-    context.pop();
+  Future<void> _onDeletePressed(BuildContext context) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => ConfirmDialog(
+        title: 'Delete Meal Idea'.text(),
+        content: "Are you sure you want to delete ${widget.mealIdea.idea}?".text(),
+        onConfirm: () => IdeasFirestoreDatasource().deleteMealIdea(widget.mealIdea.id),
+      ),
+    );
+
+    if (shouldDelete == true) {
+      context.pop();
+    }
   }
 
   void _editIdea() {
     BottomSheetHelper.show(
+      height: widget.mealIdea.notes == "" ? 200 : null,
       context: context,
       child: Column(
         children: [
@@ -30,12 +43,8 @@ class _MealIdeaTileState extends State<MealIdeaTile> {
             children: [
               Spacer(),
               IconButton(
-                icon: Icon(Icons.edit_rounded),
-                onPressed: () {},
-              ),
-              IconButton(
                 icon: Icon(Icons.delete_rounded),
-                onPressed: () {},
+                onPressed: () => _onDeletePressed(context),
               ),
             ],
           ),
@@ -50,8 +59,16 @@ class _MealIdeaTileState extends State<MealIdeaTile> {
             height: 8,
           ),
           Text(
-            widget.mealIdea.type.capitalizeFirst(),
+            "${widget.mealIdea.type.capitalizeFirst()} • ${widget.mealIdea.person}",
             style: context.textTheme.labelLarge,
+          ),
+
+          24.gapHeight,
+
+          Text(
+            widget.mealIdea.notes,
+            textAlign: TextAlign.left,
+            style: context.textTheme.bodyMedium!.copyWith(color: context.colorScheme.onSurfaceVariant),
           ),
         ],
       ),

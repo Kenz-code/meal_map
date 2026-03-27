@@ -1,9 +1,13 @@
 TODO:
--open bottom sheet upon long pressing a meal
 -create simple settings page with a theme toggle and log out function
--rig up a meal idea page
+-add filter functionality to meal idea page
+-add and delete meal in the bottom sheet
+-refresh ability in all screens
 
 DONE:
 -create dropdown effect for each day in the meals page
 -create logo
 -convert grocery page to firestore
+-rig up a meal idea page
+-open bottom sheet upon long pressing a meal
+-convert meal idea page to firestore
