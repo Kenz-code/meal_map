@@ -1,8 +1,9 @@
 TODO:
 -create simple settings page with a theme toggle and log out function
--add filter functionality to meal idea page
 -add and delete meal in the bottom sheet
--refresh ability in all screens
+-auto complete for groceries
+-auto complete names in meals and meal ideas
+-create onboarding
 
 DONE:
 -create dropdown effect for each day in the meals page
@@ -11,3 +12,5 @@ DONE:
 -rig up a meal idea page
 -open bottom sheet upon long pressing a meal
 -convert meal idea page to firestore
+-add filter functionality to meal idea page
+-refresh ability in all screens

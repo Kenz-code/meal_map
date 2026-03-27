@@ -12,6 +12,7 @@ import 'package:meal_map/features/home/screens/create_meal_page.dart';
 import 'package:meal_map/features/home/screens/meals_page.dart';
 import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
 import 'package:meal_map/features/ideas/screens/ideas_page.dart';
+import 'package:meal_map/features/settings/screens/settings_page.dart';
 import 'package:provider/provider.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -224,7 +225,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/settings',
-              builder: (context, state) => MyHomePage(title: "awesome"),
+              builder: (context, state) => SettingsPage(),
             )
           ]),
         ],

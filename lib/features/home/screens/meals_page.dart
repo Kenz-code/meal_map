@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     startOfThisWeek = startOfWeek;
   }
 
-  void _reloadMeals() {
+  Future<void> _reloadMeals() async {
     setState(() {
       _futureMeals = MealsFirestoreDatasource().loadAllMeals();
     });
@@ -230,13 +230,16 @@ class _HomePageState extends State<HomePage> {
 
                       formatMeals(meals);
 
-                      return ListView.builder(
-                        itemCount: 7,
-                        itemBuilder: (context, index) {
-                          final date = _startOfWeek.add(Duration(days: index));
+                      return RefreshIndicator(
+                        onRefresh: _reloadMeals,
+                        child: ListView.builder(
+                          itemCount: 7,
+                          itemBuilder: (context, index) {
+                            final date = _startOfWeek.add(Duration(days: index));
 
-                          return getDayCardFromDate(date);
-                        },
+                            return getDayCardFromDate(date);
+                          },
+                        ),
                       );
                     }
                   }),

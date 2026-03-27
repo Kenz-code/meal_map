@@ -1,16 +1,19 @@
 import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 
 class ConfirmDialog extends StatefulWidget {
   final Text title;
   final Text content;
   final String confirmLabel;
+  final bool isConfirmError;
   final Future<void> Function() onConfirm;
 
   const ConfirmDialog({
     required this.title,
     required this.content,
     required this.onConfirm,
+    this.isConfirmError=false,
     this.confirmLabel = 'Confirm',
   });
 
@@ -43,7 +46,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
             height: 16,
             child: CircularProgressIndicator(strokeWidth: 2),
           )
-              : Text(widget.confirmLabel),
+              : widget.confirmLabel.text().styled(color: widget.isConfirmError ? context.colorScheme.error : null),
         ),
       ],
     );

@@ -50,6 +50,13 @@ class _IdeasPageState extends State<IdeasPage> {
     });
   }
 
+  Future<void> _onRefresh() async {
+    setState(() {
+      _isLoading = true;
+      _loadBank();
+    });
+  }
+
   Future<void> _goToAddPage() async {
     await context.push('/ideas/create');
     await _loadBank(); // reload bank after adding ideas
@@ -193,10 +200,13 @@ class _IdeasPageState extends State<IdeasPage> {
             );
           }
 
-          return ListView(
-            children: filteredIdeas.map((i) {
-              return MealIdeaTile(mealIdea: i,);
-            }).toList(),
+          return RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView(
+              children: filteredIdeas.map((i) {
+                return MealIdeaTile(mealIdea: i,);
+              }).toList(),
+            ),
           );
         }
       ),

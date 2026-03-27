@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:meal_map/core/theme/theme.dart';
 import 'dart:async';
+import 'package:meal_map/core/services/shared_prefs_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  bool _isDark = true;
+  bool _isDark;
+  final SharedPrefsService _prefsService;
+
+  ThemeProvider(this._prefsService) : _isDark = _prefsService.getBoolOrDefault('ui_dark_mode_enabled', defaultValue: false);
+
   bool get isDark => _isDark;
 
   ThemeMode get currentMode => _isDark ? ThemeMode.dark : ThemeMode.light;
@@ -13,9 +18,11 @@ class ThemeProvider extends ChangeNotifier {
 
   void toggleTheme() {
     _isDark = !_isDark;
+    _prefsService.setBool('ui_dark_mode_enabled', _isDark);
     notifyListeners();
   }
 }
+
 
 class AppStateNotifier extends ChangeNotifier {
   bool _initialized = false;
@@ -33,6 +40,7 @@ class AppStateNotifier extends ChangeNotifier {
   Future<void> _init() async {
     // final prefs = await SharedPreferences.getInstance();
     // _isFirstLaunch = prefs.getBool('seenOnboarding') ?? true;
+
     _isFirstLaunch = false;
 
     _isLoggedIn = AuthService().isLoggedIn();
@@ -56,6 +64,15 @@ class AppStateNotifier extends ChangeNotifier {
 
   void logout() {
     AuthService().signOut();
+
+    _isLoggedIn = false;
+
+    notifyListeners();
+  }
+
+  void deleteAccount() async {
+    final e = await AuthService().deleteUser();
+    debugPrint(e);
 
     _isLoggedIn = false;
 
