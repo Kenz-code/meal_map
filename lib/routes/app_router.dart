@@ -8,7 +8,9 @@ import 'package:meal_map/features/auth/screens/login_page.dart';
 import 'package:meal_map/features/auth/screens/signup_page.dart';
 import 'package:meal_map/features/grocery/screens/add_grocery_page.dart';
 import 'package:meal_map/features/grocery/screens/grocery_page.dart';
+import 'package:meal_map/features/home/models/meal_data.dart';
 import 'package:meal_map/features/home/screens/create_meal_page.dart';
+import 'package:meal_map/features/home/screens/edit_meal_page.dart';
 import 'package:meal_map/features/home/screens/meals_page.dart';
 import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
 import 'package:meal_map/features/ideas/screens/ideas_page.dart';
@@ -116,6 +118,45 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
                             parent: animation, curve: Curves.easeInOut);
                         final scale =
                             Tween<double>(begin: 0.95, end: 1.0).animate(fade);
+                        final slide = Tween<Offset>(
+                          begin: const Offset(0, 0.1), // 10% down
+                          end: Offset.zero,
+                        ).animate(fade);
+
+                        return FadeTransition(
+                          opacity: fade,
+                          child: SlideTransition(
+                            position: slide,
+                            child: ScaleTransition(
+                              scale: scale,
+                              child: child,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: 'edit',
+                  parentNavigatorKey: _rootNavigatorKey, // <— THIS IS IMPORTANT
+                  pageBuilder: (context, state) {
+                    final mealData = state.extra as MealData;
+                    return CustomTransitionPage(
+                      key: state.pageKey,
+                      child: EditMealPage(
+                        oldMealData: mealData,
+                      ),
+                      reverseTransitionDuration:
+                      const Duration(milliseconds: 150), // faster animation
+                      transitionDuration:
+                      const Duration(milliseconds: 150), // faster animation
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        final fade = CurvedAnimation(
+                            parent: animation, curve: Curves.easeInOut);
+                        final scale =
+                        Tween<double>(begin: 0.95, end: 1.0).animate(fade);
                         final slide = Tween<Offset>(
                           begin: const Offset(0, 0.1), // 10% down
                           end: Offset.zero,

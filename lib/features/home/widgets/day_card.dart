@@ -68,6 +68,14 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<void> _onEditPressed(BuildContext context, MealData mealUi) async {
+    final bool didEdit = await context.push('/meals/edit', extra: mealUi) as bool? ?? false;
+
+    context.pop();
+
+    widget.refresh.call();
+  }
+
   void _editDay(MealTypes mealType) {
     final MealData mealUi = widget.mealPlan.getMeal(mealType)!;
 
@@ -81,7 +89,7 @@ class _DayCardState extends State<DayCard> with SingleTickerProviderStateMixin {
               Spacer(),
               IconButton(
                 icon: Icon(Icons.edit_rounded),
-                onPressed: () {},
+                onPressed: () => _onEditPressed(context, mealUi),
               ),
               IconButton(
                 icon: Icon(Icons.delete_rounded),

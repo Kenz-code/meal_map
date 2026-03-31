@@ -5,16 +5,16 @@ import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
 import 'package:meal_map/features/home/data/meals_local_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 
-class CreateMealPage extends StatefulWidget {
-  const CreateMealPage({super.key, required this.firstAndLastDays});
+class EditMealPage extends StatefulWidget {
+  const EditMealPage({super.key, required this.oldMealData});
 
-  final List<DateTime> firstAndLastDays;
+  final MealData oldMealData;
 
   @override
-  State<CreateMealPage> createState() => _CreateMealPageState();
+  State<EditMealPage> createState() => _EditMealPageState();
 }
 
-class _CreateMealPageState extends State<CreateMealPage> {
+class _EditMealPageState extends State<EditMealPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _mealName;
@@ -29,6 +29,18 @@ class _CreateMealPageState extends State<CreateMealPage> {
   bool saving = false;
 
   final List<String> mealTypes = ['Breakfast', 'Lunch', 'Dinner'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // set all fields
+    _mealName = widget.oldMealData.mealName;
+    _mealType = widget.oldMealData.mealType;
+    _cook = widget.oldMealData.cook;
+    _notes = widget.oldMealData.notes;
+    _selectedDate = widget.oldMealData.dateTime;
+  }
 
   Future<bool> checkForOverridingMeals(DateTime date, String mealType) async {
     bool isThereOverridingMeals = false;
@@ -70,78 +82,44 @@ class _CreateMealPageState extends State<CreateMealPage> {
           _selectedDate.year, _selectedDate.month, _selectedDate.day, 12, 0, 0, 0, 0);
 
       bool okToSave = true;
-      // check if selectedDate is before firstDay or after lastDay and conform with user
-      if (_selectedDate.isBefore(widget.firstAndLastDays[0])) {
-        await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Date out of range"),
-                  content: Text(
-                      "The selected date is from a past week and won't appear on the Meals Screen."),
-                  actions: [
-                    TextButton(
-                      child: Text("Back"),
-                      onPressed: () {
-                        okToSave = false;
-                        context.pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text("Save"),
-                      onPressed: () {
-                        context.pop();
-                      },
-                    ),
-                  ],
-                ));
-      } else if (_selectedDate.isAfter(widget.firstAndLastDays[1])) {
-        await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Date out of range"),
-                  content: Text(
-                      "The selected date is too far in the future and won't appear on the Meals Screen until it's within 3 weeks."),
-                  actions: [
-                    TextButton(
-                      child: Text("Back"),
-                      onPressed: () {
-                        okToSave = false;
-                        context.pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text("Save"),
-                      onPressed: () {
-                        context.pop();
-                      },
-                    ),
-                  ],
-                ));
-      }
+      bool shouldPop = false;
 
       setState(() {
         saving = true;
       });
 
-      await checkForOverridingMeals(_selectedDate, _mealType!).then(
-              (isThereOverridingMeals) {
-                if (isThereOverridingMeals) {
-                  okToSave = false;
+      final bool idWillChange =
+          _selectedDate != widget.oldMealData.dateTime ||
+              _mealType != widget.oldMealData.mealType;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(
-                        "You can't override existing meals!",
-                        style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Theme.of(context).colorScheme.onError),
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                }
+      if (idWillChange) {
+        await checkForOverridingMeals(_selectedDate, _mealType!).then(
+                (isThereOverridingMeals) {
+              if (isThereOverridingMeals) {
+                okToSave = false;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(
+                    "You can't override existing meals!",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Theme
+                        .of(context)
+                        .colorScheme
+                        .onError),
+                  ),
+                    backgroundColor: Theme
+                        .of(context)
+                        .colorScheme
+                        .error,
+                  ),
+                );
               }
-      );
+            }
+        );
+      }
 
       final MealData mealData = MealData(
           mealName: _mealName!,
@@ -150,15 +128,28 @@ class _CreateMealPageState extends State<CreateMealPage> {
           notes: _notes,
           dateTime: _selectedDate);
 
+      if (mealData.isEqualTo(widget.oldMealData)) {
+        okToSave = false;
+        shouldPop = true;
+      }
+
       if (okToSave) {
+        if (idWillChange) {
+          await MealsFirestoreDatasource().deleteMeal(widget.oldMealData.getID());
+        }
+
         await MealsFirestoreDatasource().saveMeal(mealData);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Meal created!')),
         );
 
-        context.pop();
+        context.pop(true);
       } else {
+        if (shouldPop == true) {
+          context.pop(false);
+        }
+
         setState(() {
           saving = false;
         });
@@ -178,6 +169,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
             Text('Meal Name', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             TextFormField(
+              initialValue: _mealName,
               decoration: const InputDecoration(
                 hintText: 'e.g. Steak and Mashed Potatoes',
               ),
@@ -194,16 +186,17 @@ class _CreateMealPageState extends State<CreateMealPage> {
               hint: const Text('Select meal type'),
               items: mealTypes
                   .map((type) =>
-                      DropdownMenuItem(value: type, child: Text(type)))
+                  DropdownMenuItem(value: type, child: Text(type)))
                   .toList(),
               validator: (value) =>
-                  value == null ? 'Please select a meal type' : null,
+              value == null ? 'Please select a meal type' : null,
               onChanged: (value) => setState(() => _mealType = value),
             ),
             const SizedBox(height: 24),
             Text('Cook', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             TextFormField(
+              initialValue: _cook,
               decoration: const InputDecoration(hintText: 'e.g. John Smith'),
               validator: (value) => value == null || value.isEmpty
                   ? 'Please enter the cook\'s name'
@@ -231,6 +224,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
             Text('Notes', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             TextFormField(
+              initialValue: _notes,
               decoration: const InputDecoration(
                 hintText: 'e.g. Add extra garlic, prep night before...',
               ),
@@ -243,9 +237,9 @@ class _CreateMealPageState extends State<CreateMealPage> {
               child: !saving
                   ? const Text('Save Meal')
                   : Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: CircularProgressIndicator(),
-                  ),
+                padding: const EdgeInsets.all(4.0),
+                child: CircularProgressIndicator(),
+              ),
             ),
           ],
         ),
