@@ -200,6 +200,12 @@ class _IdeasPageState extends State<IdeasPage> {
             );
           }
 
+          if (filteredIdeas.isEmpty) {
+            return Center(
+              child: Text("No matches found"),
+            );
+          }
+
           return RefreshIndicator(
             onRefresh: _onRefresh,
             child: ListView(
