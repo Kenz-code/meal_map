@@ -14,6 +14,7 @@ import 'package:meal_map/features/home/screens/edit_meal_page.dart';
 import 'package:meal_map/features/home/screens/meals_page.dart';
 import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
 import 'package:meal_map/features/ideas/screens/ideas_page.dart';
+import 'package:meal_map/features/onboarding/screens/onboarding_page.dart';
 import 'package:meal_map/features/settings/screens/settings_page.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +53,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
 
       // If onboarding is complete but user is still on onboarding screen, redirect them away
       if (!isFirstLaunch && goingToOnboarding) {
-        return isLoggedIn ? '/meals' : '/auth/login';
+        return isLoggedIn ? '/meals' : '/onboarding';
       }
 
       // If not logged in and not in auth flow, redirect to login
@@ -70,7 +71,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     routes: [
       GoRoute(
         path: '/onboarding',
-        builder: (context, state) => MyHomePage(title: "awesome"),
+        builder: (context, state) => OnboardingPage(),
       ),
       GoRoute(
         path: '/auth/login',
