@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
-import 'package:meal_map/features/onboarding/screens/household_setup_page.dart';
-import 'package:meal_map/features/onboarding/widgets/falling_page_route.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -147,12 +146,7 @@ class _OnboardingPageState extends State<OnboardingPage>
 
     _exitController.forward();
 
-    Navigator.push(
-      context,
-      FallingPageRoute(
-        page: const HouseholdSetupPage(),
-      ),
-    );
+    context.push('/householdSetup');
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 
 class HouseholdSetupPage extends StatefulWidget {
@@ -204,7 +205,9 @@ class _HouseholdSetupPageState extends State<HouseholdSetupPage>
                 child: Row(
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/auth/signup');
+                      },
                       child: "Create a household".text(),
                     ).expanded1,
                   ],
@@ -231,7 +234,9 @@ class _HouseholdSetupPageState extends State<HouseholdSetupPage>
                 child: Row(
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/auth/login');
+                      },
                       child: "Join a household".text(),
                     ).expanded1,
                   ],

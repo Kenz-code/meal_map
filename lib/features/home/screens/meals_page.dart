@@ -23,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   bool showWeekBackArrow = false;
   bool showWeekForwardArrow = true;
 
+  int weekChangeDirection = 1;
+
   final List<String> weekdayNames = [
     'Monday',
     'Tuesday',
@@ -112,13 +114,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _changeWeek(int offset) {
-    DateTime firstDay = lastMonday(); // two weeks behind
-    DateTime lastDay = lastMonday().add(Duration(days: 21)); // two weeks ahead
-
     setState(() {
-      DateTime newStartOfWeek = startOfWeek.add(Duration(days: 7 * offset));
+      weekChangeDirection = -offset;
+
+      DateTime newStartOfWeek =
+      startOfWeek.add(Duration(days: 7 * offset));
 
       startOfWeek = newStartOfWeek;
+
+      DateTime firstDay = lastMonday();
+      DateTime lastDay = lastMonday().add(Duration(days: 21));
 
       if (isSameDayAndMonth(newStartOfWeek, firstDay)) {
         showWeekBackArrow = false;
@@ -229,17 +234,48 @@ class _HomePageState extends State<HomePage> {
                         return Text('No meals saved yet.');
                       }
 
-                      formatMeals(meals);
+                      if (snapshot.hasData) {
+                        if (formattedMeals.isEmpty) {
+                          formatMeals(snapshot.data!);
+                        }
+                      }
 
                       return RefreshIndicator(
                         onRefresh: _reloadMeals,
-                        child: ListView.builder(
-                          itemCount: 7,
-                          itemBuilder: (context, index) {
-                            final date = _startOfWeek.add(Duration(days: index));
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 350),
+                          transitionBuilder: (child, animation) {
+                            final offsetAnimation = Tween<Offset>(
+                              begin: Offset(weekChangeDirection.toDouble(), 0),
+                              end: Offset.zero,
+                            ).animate(
+                              CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeOutCubic,
+                              ),
+                            );
 
-                            return getDayCardFromDate(date);
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                            );
                           },
+                          child: ListView.builder(
+                            key: ValueKey(startOfWeek),
+                            itemCount: 7,
+                            itemBuilder: (context, index) {
+                              final date = _startOfWeek.add(Duration(days: index));
+
+                              return AnimatedDayCard(
+                                key: ValueKey(startOfWeek),
+                                index: index,
+                                child: getDayCardFromDate(date),
+                              );
+                            },
+                          ),
                         ),
                       );
                     }
@@ -247,6 +283,77 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class AnimatedDayCard extends StatefulWidget {
+  final Widget child;
+  final int index;
+
+  const AnimatedDayCard({
+    super.key,
+    required this.child,
+    required this.index,
+  });
+
+  @override
+  State<AnimatedDayCard> createState() => _AnimatedDayCardState();
+}
+
+class _AnimatedDayCardState extends State<AnimatedDayCard>
+    with SingleTickerProviderStateMixin {
+
+  late AnimationController controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    );
+
+    animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeOut,
+    );
+
+    Future.delayed(
+      Duration(milliseconds: widget.index * 80),
+          () {
+        if (mounted) controller.forward();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: animation,
+      child: ScaleTransition(
+        scale: Tween<double>(
+          begin: 0.95,
+          end: 1,
+        ).animate(animation),
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.08),
+            end: Offset.zero,
+          ).animate(animation),
+          child: widget.child,
+        ),
       ),
     );
   }

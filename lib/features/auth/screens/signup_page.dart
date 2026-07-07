@@ -10,6 +10,7 @@ class SignupPage extends StatelessWidget {
 
   String? _email;
   String? _password;
+  String? _householdName;
 
   SignupPage({super.key});
 
@@ -39,6 +40,14 @@ class SignupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_ios_new_rounded)
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -58,7 +67,7 @@ class SignupPage extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    "Sign up",
+                    "Create household",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   SizedBox(
@@ -87,7 +96,19 @@ class SignupPage extends StatelessWidget {
                     onChanged: (value) => _password = value,
                   ),
                   SizedBox(
-                    height: 16,
+                    height: 24,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Household name',
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter a household name'
+                        : null,
+                    onChanged: (value) => _householdName = value,
+                  ),
+                  SizedBox(
+                    height: 24,
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -97,27 +118,6 @@ class SignupPage extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 32,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account?"),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          context.go('/auth/login');
-                        },
-                        child: Text(
-                          "Log in",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(decoration: TextDecoration.underline),
-                        ),
-                      )
-                    ],
                   ),
                   Spacer()
                 ],

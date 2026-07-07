@@ -40,6 +40,14 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back_ios_new_rounded)
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -53,13 +61,13 @@ class LoginPage extends StatelessWidget {
                   Spacer(),
                   Center(
                     child: Text(
-                      "Welcome Back!",
+                      "Join household",
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
                   Spacer(),
                   Text(
-                    "Log in",
+                    "Manually log in",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   SizedBox(
@@ -71,7 +79,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) => value == null || value.isEmpty
-                        ? 'Please enter your email'
+                        ? 'Please enter a email'
                         : null,
                     onChanged: (value) => _email = value,
                   ),

@@ -14,6 +14,7 @@ import 'package:meal_map/features/home/screens/edit_meal_page.dart';
 import 'package:meal_map/features/home/screens/meals_page.dart';
 import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
 import 'package:meal_map/features/ideas/screens/ideas_page.dart';
+import 'package:meal_map/features/onboarding/screens/household_setup_page.dart';
 import 'package:meal_map/features/onboarding/screens/onboarding_page.dart';
 import 'package:meal_map/features/settings/screens/settings_page.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
 
       final goingToAuth = fullPath.startsWith('/auth');
       final goingToOnboarding = fullPath == '/onboarding';
+      final goingToHouseholdSetup = fullPath == '/householdSetup';
       final goingToShell = fullPath.startsWith('/meals') ||
           fullPath.startsWith('/grocery') ||
           fullPath.startsWith('/ideas') ||
@@ -57,7 +59,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       }
 
       // If not logged in and not in auth flow, redirect to login
-      if (!isLoggedIn && !goingToAuth) {
+      if (!isLoggedIn && !goingToAuth && !goingToHouseholdSetup) {
         return '/auth/login';
       }
 
@@ -71,7 +73,36 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
     routes: [
       GoRoute(
         path: '/onboarding',
-        builder: (context, state) => OnboardingPage(),
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const OnboardingPage(),
+      ),
+      GoRoute(
+        path: '/householdSetup',
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const HouseholdSetupPage(),
+            transitionDuration: const Duration(milliseconds: 1000),
+            reverseTransitionDuration: const Duration(milliseconds: 1000),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, -1),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeInOutCubicEmphasized,
+                  ),
+                ),
+                child: child,
+              );
+            },
+          );
+        },
       ),
       GoRoute(
         path: '/auth/login',

@@ -1,8 +1,9 @@
 TODO:
 -auto complete for groceries
 -auto complete names in meals and meal ideas
--create onboarding
 -when log into account on device, save email for one tap login in future
+-qr code login
+-app "tutorial"
 
 DONE:
 -create dropdown effect for each day in the meals page
@@ -15,3 +16,5 @@ DONE:
 -refresh ability in all screens
 -create simple settings page with a theme toggle and log out function
 -edit and delete meal in the bottom sheet
+-create onboarding animation
+-overhaul authentication for "household"
