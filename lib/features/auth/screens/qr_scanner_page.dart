@@ -1,4 +1,7 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_map/core/extensions/context_theme_extensions.dart';
+import 'package:meal_map/features/auth/widgets/progress_to_check.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../services/qr_login_service.dart';
@@ -14,9 +17,11 @@ class QrScannerPage extends StatefulWidget {
 }
 
 
-class _QrScannerPageState extends State<QrScannerPage> {
+class _QrScannerPageState extends State<QrScannerPage> with SingleTickerProviderStateMixin {
 
   bool _loggingIn = false;
+
+  bool _playSuccessAnimation = false;
 
 
   Future<void> _handleQr(String value) async {
@@ -46,6 +51,11 @@ class _QrScannerPageState extends State<QrScannerPage> {
 
       if (!mounted) return;
 
+      setState(() {
+        _playSuccessAnimation = true;
+      });
+
+      await Future.delayed(Duration(milliseconds: 900));
 
       Navigator.pop(context, true);
 
@@ -104,10 +114,9 @@ class _QrScannerPageState extends State<QrScannerPage> {
 
 
           if (_loggingIn)
-            const Center(
-              child: CircularProgressIndicator(),
+            Center(
+              child: ProgressToCheck(completed: _playSuccessAnimation)
             ),
-
         ],
       ),
     );
