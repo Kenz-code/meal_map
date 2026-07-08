@@ -1,5 +1,4 @@
 TODO:
--auto complete for groceries
 -auto complete names in meals and meal ideas
 -when log into account on device, save email for one tap login in future
 -app "tutorial"
@@ -20,3 +19,4 @@ DONE:
 -overhaul authentication for "household"
 -qr code login
 -animate qr code login
+-auto complete for groceries

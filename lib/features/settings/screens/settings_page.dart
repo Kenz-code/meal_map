@@ -37,8 +37,8 @@ class SettingsPage extends StatelessWidget {
           ),
 
           ListTile(
-            title: "Connect new device".text(),
-            leading: Icons.person_add_rounded.icon(),
+            title: "Connect new device with QR code".text(),
+            leading: Icons.qr_code_2_rounded.icon(),
             onTap: () async {
               if (!context.mounted) return;
 
