@@ -278,10 +278,13 @@ class NumberedTab extends StatelessWidget {
       ),
     );
 
-    final label = AutoSizeText(
-      title,
-      style: context.textTheme.labelLarge!.copyWith(
-        letterSpacing: 0.75,
+    final label = Flexible(
+      child: AutoSizeText(
+        title,
+        style: context.textTheme.labelLarge,
+        minFontSize: 10,
+        wrapWords: false,
+        maxLines: 2,
       ),
     );
 

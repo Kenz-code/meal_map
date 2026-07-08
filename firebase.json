@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"mealmapapp","appId":"1:31322581563:android:eb8d0e747c9c5b689dca1e","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"mealmapapp","configurations":{"android":"1:31322581563:android:eb8d0e747c9c5b689dca1e","web":"1:31322581563:web:3f678c4b56c5b2c59dca1e"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mealmapapp",
+          "appId": "1:31322581563:android:eb8d0e747c9c5b689dca1e",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mealmapapp",
+          "configurations": {
+            "android": "1:31322581563:android:eb8d0e747c9c5b689dca1e",
+            "web": "1:31322581563:web:3f678c4b56c5b2c59dca1e"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -66,6 +67,18 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final result = await context.push("/auth/qrScanner");
+
+                      if (result == true) {
+                        Provider.of<AppStateNotifier>(context, listen: false).login();
+                      }
+                    },
+                    icon: Icon(Icons.qr_code_scanner_rounded),
+                    label: "Scan QR to join household".text(),
+                  ),
+                  Divider(height: 48,),
                   Text(
                     "Manually log in",
                     style: Theme.of(context).textTheme.titleMedium,
@@ -104,30 +117,6 @@ class LoginPage extends StatelessWidget {
                     child: ElevatedButton(
                         onPressed: () => _onLoginPressed(context),
                         child: Text("Log in")),
-                  ),
-                  SizedBox(
-                    height: 32,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Don't have an account?"),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          context.go('/auth/signup');
-                        },
-                        child: Text(
-                          "Sign up",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(decoration: TextDecoration.underline),
-                        ),
-                      )
-                    ],
                   ),
                   Spacer()
                 ],

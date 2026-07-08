@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:meal_map/core/services/user_firestore_manager_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,18 +11,20 @@ class AuthService {
   User? get currentUser => _auth.currentUser;
 
   /// Register with email and password
-  Future<String?> register(String email, String password) async {
+  Future<String?> register(String email, String password, String householdName) async {
     try {
       await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
-      return null; // Success
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
       return 'An unknown error occurred during registration.';
     }
+
+    UserFirestoreManagerService().createUserDocument(householdName);
+    return null;
   }
 
   /// Sign in with email and password

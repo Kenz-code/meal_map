@@ -19,7 +19,7 @@ class SignupPage extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
 
     if (_formKey.currentState!.validate()) {
-      String? result = await AuthService().register(_email!, _password!);
+      String? result = await AuthService().register(_email!, _password!, _householdName!);
       if (result != null) {
         messenger.showSnackBar(SnackBar(
           content: Text(

@@ -2,8 +2,10 @@ import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
+import 'package:meal_map/features/auth/services/qr_login_service.dart';
 import 'package:meal_map/core/services/settings_service.dart';
 import 'package:meal_map/core/widgets/confirm_dialog.dart';
+import 'package:meal_map/features/auth/widgets/pair_device_qr_dialog.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -31,6 +33,19 @@ class SettingsPage extends StatelessWidget {
             value: themeProvider.isDark,
             onChanged: (newValue) {
               themeProvider.toggleTheme();
+            },
+          ),
+
+          ListTile(
+            title: "Connect new device".text(),
+            leading: Icons.person_add_rounded.icon(),
+            onTap: () async {
+              if (!context.mounted) return;
+
+              showDialog(
+                context: context,
+                builder: (_) => PairDeviceDialog(),
+              );
             },
           ),
 

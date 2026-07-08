@@ -5,6 +5,7 @@ import 'package:meal_map/app/app.dart';
 import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/widgets/scaffold_with_nav_bar.dart';
 import 'package:meal_map/features/auth/screens/login_page.dart';
+import 'package:meal_map/features/auth/screens/qr_scanner_page.dart';
 import 'package:meal_map/features/auth/screens/signup_page.dart';
 import 'package:meal_map/features/grocery/screens/add_grocery_page.dart';
 import 'package:meal_map/features/grocery/screens/grocery_page.dart';
@@ -111,6 +112,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       GoRoute(
         path: '/auth/signup',
         builder: (context, state) => SignupPage(),
+      ),
+      GoRoute(
+        path: '/auth/qrScanner',
+        builder: (context, state) => QrScannerPage(),
       ),
       StatefulShellRoute.indexedStack(
         // builder: (context, state, shell) => ScaffoldWithNavBar(navigationShell: shell),

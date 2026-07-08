@@ -20,4 +20,14 @@ class UserFirestoreManagerService {
       await _userDoc.set({'createdAt': FieldValue.serverTimestamp()});
     }
   }
+
+  Future<void> createUserDocument(String householdName) async {
+    if (_currentUserId.isEmpty) {
+      throw Exception('User is not authenticated');
+    }
+    final doc = await _userDoc.get();
+    if (!doc.exists) {
+      await _userDoc.set({'createdAt': FieldValue.serverTimestamp(), 'householdName': householdName});
+    }
+  }
 }
