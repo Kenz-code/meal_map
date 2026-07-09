@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/services/shared_prefs_service.dart';
+import 'package:meal_map/core/services/user_firestore_manager_service.dart';
 import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 import 'package:meal_map/features/home/models/meal_plan_ui.dart';
-import 'package:meal_map/features/home/models/meal_ui.dart';
 import 'package:meal_map/features/home/widgets/day_card.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +49,8 @@ class _HomePageState extends State<HomePage> {
             .subtract(Duration(days: DateTime.now().weekday - DateTime.monday));
     startOfThisWeek = startOfWeek;
 
+    UserFirestoreManagerService().createCurrentDevice();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isFirstLaunch();
     });
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     if (result == true) {
       SharedPrefsService.instance.setBool('isFirstLaunch', false);
     } else {
-      // return;
+      return;
     }
 
     await showDialog(

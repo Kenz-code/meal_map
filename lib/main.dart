@@ -1,8 +1,6 @@
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:meal_map/core/services/settings_service.dart';
+import 'package:meal_map/core/services/app_version_service.dart';
 import 'package:meal_map/routes/app_router.dart';
 import 'app/app.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +20,7 @@ void main() async {
   );
 
   await SharedPrefsService.init();
+  await AppVersionService.instance.init();
 
   final appStateNotifier = AppStateNotifier();
   final router = createRouter(appStateNotifier);
