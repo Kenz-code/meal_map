@@ -197,7 +197,7 @@ class _GroceryPageState extends State<GroceryPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error loading groceries: ${snapshot.error}'));
           } else if (!snapshot.hasData || (_isItemsMapEmpty(snapshot.data!) && crossedOffItems.isEmpty)) {
-            return const Center(child: Text('No groceries found.'));
+            return const Center(child: Text('No groceries yet.\n\nPress the + to add a grocery.', textAlign: TextAlign.center));
           }
 
           final items = snapshot.data!;

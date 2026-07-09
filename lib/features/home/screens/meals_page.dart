@@ -1,11 +1,15 @@
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meal_map/app/app_provider.dart';
+import 'package:meal_map/core/services/shared_prefs_service.dart';
 import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
 import 'package:meal_map/features/home/models/meal_plan_ui.dart';
 import 'package:meal_map/features/home/models/meal_ui.dart';
 import 'package:meal_map/features/home/widgets/day_card.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,6 +48,63 @@ class _HomePageState extends State<HomePage> {
         : DateTime.now()
             .subtract(Duration(days: DateTime.now().weekday - DateTime.monday));
     startOfThisWeek = startOfWeek;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isFirstLaunch();
+    });
+  }
+
+  void isFirstLaunch() async {
+    final shell = StatefulNavigationShell.of(context);
+
+    final result = SharedPrefsService.instance.getBoolOrDefault("isFirstLaunch", defaultValue: true);
+
+    if (result == true) {
+      SharedPrefsService.instance.setBool('isFirstLaunch', false);
+    } else {
+      // return;
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: "Welcome to your household".text(),
+        content: Text("Meal Map is designed for families.\n\nEveryone in your home shares one account, so meals and grocery lists stay perfectly in sync."),
+        actions: [
+          ElevatedButton(
+            onPressed: () {context.pop();},
+            child: "Continue".text(),
+          )
+        ],
+      ),
+    );
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: "Connect another device".text(),
+        content: Text("Already have Meal Map on another phone?\n\nScan a QR code to sign in instantly."),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              context.pop();
+
+              context.read<AppStateNotifier>().requestQrHighlight();
+              shell.goBranch(3);
+            },
+            child: "Scan QR".text(),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: "I'll do this later".text(),
+          )
+        ],
+      ),
+    );
   }
 
   Future<void> _reloadMeals() async {
@@ -231,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                     } else {
                       final meals = snapshot.data ?? [];
                       if (meals.isEmpty) {
-                        return Text('No meals saved yet.');
+                        return Text('No meals saved yet.\n\nPress the + to add a meal.', textAlign: TextAlign.center,);
                       }
 
                       if (snapshot.hasData) {

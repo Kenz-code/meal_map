@@ -196,7 +196,7 @@ class _IdeasPageState extends State<IdeasPage> {
 
           if (ideaBank.isEmpty) {
             return Center(
-              child: Text("Press + to add a meal idea"),
+              child: Text("Build your collection of favorite meals.\n\nGenerate ideas with AI or save recipes you love.\n\nPress + to add a meal idea", textAlign: TextAlign.center,),
             );
           }
 

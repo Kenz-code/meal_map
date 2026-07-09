@@ -6,6 +6,7 @@ import 'package:meal_map/features/auth/services/qr_login_service.dart';
 import 'package:meal_map/core/services/settings_service.dart';
 import 'package:meal_map/core/widgets/confirm_dialog.dart';
 import 'package:meal_map/features/auth/widgets/pair_device_qr_dialog.dart';
+import 'package:meal_map/features/settings/widgets/pulsing_tile.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -15,6 +16,8 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = SettingsService();
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    final highlight = context.watch<AppStateNotifier>().highlightQrLogin;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,17 +39,38 @@ class SettingsPage extends StatelessWidget {
             },
           ),
 
-          ListTile(
-            title: "Connect new device with QR code".text(),
-            leading: Icons.qr_code_2_rounded.icon(),
-            onTap: () async {
-              if (!context.mounted) return;
+          PulsingTile(
+            enabled: highlight,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: highlight
+                    ? [
+                  BoxShadow(
+                    blurRadius: 10,
+                    spreadRadius: -4,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(.15),
+                  )
+                ]
+                    : [],
+              ),
+              child: ListTile(
+                title: "Connect new device with QR code".text(),
+                leading: Icons.qr_code_2_rounded.icon(),
+                onTap: () {
+                  context.read<AppStateNotifier>().clearQrHighlight();
 
-              showDialog(
-                context: context,
-                builder: (_) => PairDeviceDialog(),
-              );
-            },
+                  showDialog(
+                    context: context,
+                    builder: (_) => PairDeviceDialog(),
+                  );
+                },
+              ),
+            ),
           ),
 
           ListTile(

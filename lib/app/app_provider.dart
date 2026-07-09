@@ -33,6 +33,8 @@ class AppStateNotifier extends ChangeNotifier {
   bool get isFirstLaunch => _isFirstLaunch;
   bool get isLoggedIn => _isLoggedIn;
 
+  bool highlightQrLogin = false;
+
   AppStateNotifier() {
     _init();
   }
@@ -76,6 +78,18 @@ class AppStateNotifier extends ChangeNotifier {
 
     _isLoggedIn = false;
 
+    notifyListeners();
+  }
+
+
+
+  void requestQrHighlight() {
+    highlightQrLogin = true;
+    notifyListeners();
+  }
+
+  void clearQrHighlight() {
+    highlightQrLogin = false;
     notifyListeners();
   }
 }

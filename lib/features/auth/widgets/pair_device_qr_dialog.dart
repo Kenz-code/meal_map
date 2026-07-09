@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -163,6 +164,9 @@ class _PairDeviceDialogState
           'Expires in ${seconds}s',
         ),
 
+        16.gapHeight,
+
+        "Scan this code on your other device".text(style: context.textTheme.bodySmall, textAlign: TextAlign.center)
       ],
     );
   }

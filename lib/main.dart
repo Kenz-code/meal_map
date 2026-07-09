@@ -15,7 +15,6 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // file with open ai key
   await dotenv.load(fileName: "main.env");
 
   await Firebase.initializeApp(
@@ -24,31 +23,28 @@ void main() async {
 
   await SharedPrefsService.init();
 
+  final appStateNotifier = AppStateNotifier();
+  final router = createRouter(appStateNotifier);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
-  ]).then((value) => runApp(DevicePreview(
-    enabled: false,
-    builder: (context) => MultiProvider(
+  ]).then((value) => runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(SharedPrefsService.instance),
         ),
-        ChangeNotifierProvider(
-          create: (_) => AppStateNotifier(),
+        ChangeNotifierProvider.value(
+          value: appStateNotifier,
         ),
       ],
-      child: Consumer<AppStateNotifier>(
-        builder: (context, appState, _) {
-          final router = createRouter(appState);
-
-          return MyApp(
-            router: router,
-          );
-        },
+      child: MyApp(
+        router: router,
       ),
     ),
-  )));
+  ));
+}
 
   // runApp(MultiProvider(
   //   providers: [
@@ -69,4 +65,4 @@ void main() async {
   //     },
   //   ),
   // ));
-}
+// }

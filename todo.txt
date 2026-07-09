@@ -1,8 +1,8 @@
 TODO:
 -auto complete names in meals and meal ideas
 -when log into account on device, save email for one tap login in future
--app "tutorial"
-
+-abilty to change household name
+-household device management
 
 DONE:
 -create dropdown effect for each day in the meals page
@@ -20,3 +20,4 @@ DONE:
 -qr code login
 -animate qr code login
 -auto complete for groceries
+-app "tutorial"
