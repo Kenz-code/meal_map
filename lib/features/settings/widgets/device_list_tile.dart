@@ -15,6 +15,29 @@ class DeviceListTile extends StatelessWidget {
     this.onTap,
   });
 
+  String timeAgo(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return 'just now';
+    } else if (difference.inMinutes < 60) {
+      final minutes = difference.inMinutes;
+      return '$minutes minute${minutes == 1 ? '' : 's'} ago';
+    } else if (difference.inHours < 24) {
+      final hours = difference.inHours;
+      return '$hours hour${hours == 1 ? '' : 's'} ago';
+    } else if (difference.inDays < 30) {
+      final days = difference.inDays;
+      return '$days day${days == 1 ? '' : 's'} ago';
+    } else if (difference.inDays < 365) {
+      final months = (difference.inDays / 30).floor();
+      return '$months month${months == 1 ? '' : 's'} ago';
+    } else {
+      final years = (difference.inDays / 365).floor();
+      return '$years year${years == 1 ? '' : 's'} ago';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isCurrent = device.id == currentDeviceId;
@@ -65,7 +88,7 @@ class DeviceListTile extends StatelessWidget {
       ),
       subtitle: Text(
         '${device.model}\n'
-            'Last active ${DateFormat.yMMMd().add_jm().format(device.lastActive)}',
+            '${isCurrent ? 'Active now' : 'Last active ${timeAgo(device.lastActive)}'}',
       ),
       isThreeLine: true,
     );
