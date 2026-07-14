@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meal_map/app/app_provider.dart';
+import 'package:meal_map/core/services/device_service.dart';
 import 'package:meal_map/core/services/shared_prefs_service.dart';
 import 'package:meal_map/core/services/user_firestore_manager_service.dart';
 import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
@@ -220,6 +221,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    DeviceService.instance.updateCurrentDeviceLastActive();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meals'),

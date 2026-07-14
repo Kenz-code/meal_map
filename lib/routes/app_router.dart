@@ -17,6 +17,8 @@ import 'package:meal_map/features/ideas/screens/add_ideas_page.dart';
 import 'package:meal_map/features/ideas/screens/ideas_page.dart';
 import 'package:meal_map/features/onboarding/screens/household_setup_page.dart';
 import 'package:meal_map/features/onboarding/screens/onboarding_page.dart';
+import 'package:meal_map/features/settings/screens/devices_page.dart';
+import 'package:meal_map/features/settings/screens/edit_device_name_page.dart';
 import 'package:meal_map/features/settings/screens/settings_page.dart';
 import 'package:provider/provider.dart';
 
@@ -333,6 +335,16 @@ path=$path
             GoRoute(
               path: '/settings',
               builder: (context, state) => SettingsPage(),
+              routes: [
+                GoRoute(
+                  path: 'devices',
+                  builder: (context, state) => DevicesPage(),
+                ),
+                GoRoute(
+                  path: "editDeviceName",
+                  builder: (context, state) => EditDeviceNamePage()
+                )
+              ]
             )
           ]),
         ],
