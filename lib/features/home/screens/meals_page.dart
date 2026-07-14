@@ -49,8 +49,6 @@ class _HomePageState extends State<HomePage> {
             .subtract(Duration(days: DateTime.now().weekday - DateTime.monday));
     startOfThisWeek = startOfWeek;
 
-    UserFirestoreManagerService().createCurrentDevice();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isFirstLaunch();
     });

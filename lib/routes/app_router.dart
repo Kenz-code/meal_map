@@ -25,53 +25,79 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter createRouter(AppStateNotifier appStateNotifier) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/onboarding',
+    initialLocation: '/',
     refreshListenable: appStateNotifier,
     redirect: (context, state) {
-      final appState = Provider.of<AppStateNotifier>(context, listen: false);
-
-      if (!appState.initialized) return null;
-
-      final isLoggedIn = appState.isLoggedIn;
-      final isFirstLaunch = appState.isFirstLaunch;
-      final fullPath = state.fullPath ?? '';
-
-      final goingToAuth = fullPath.startsWith('/auth');
-      final goingToOnboarding = fullPath == '/onboarding';
-      final goingToHouseholdSetup = fullPath == '/householdSetup';
-      final goingToShell = fullPath.startsWith('/meals') ||
-          fullPath.startsWith('/grocery') ||
-          fullPath.startsWith('/ideas') ||
-          fullPath.startsWith('/settings');
-
-      if (kDebugMode) {
-        print(
-          "Redirect check: isLoggedIn=$isLoggedIn, isFirstLaunch=$isFirstLaunch, fullPath=$fullPath");
+      if (!appStateNotifier.initialized) {
+        return null;
       }
 
-      // Redirect to onboarding if needed
-      if (isFirstLaunch && !goingToOnboarding) {
-        return '/onboarding';
+      final loggedIn = appStateNotifier.isLoggedIn;
+      final firstLaunch = appStateNotifier.isFirstLaunch;
+
+      final path = state.uri.path;
+
+      final isAuth =
+      path.startsWith('/auth');
+
+      final isOnboarding =
+          path == '/onboarding';
+
+      final isSetup =
+          path == '/householdSetup';
+
+      final isApp =
+          path.startsWith('/meals') ||
+              path.startsWith('/grocery') ||
+              path.startsWith('/ideas') ||
+              path.startsWith('/settings');
+
+
+      print(
+          '''
+REDIRECT:
+loggedIn=$loggedIn
+firstLaunch=$firstLaunch
+path=$path
+'''
+      );
+
+
+      // First time opening app
+      if (firstLaunch) {
+        return isOnboarding
+            ? null
+            : '/onboarding';
       }
 
-      // If onboarding is complete but user is still on onboarding screen, redirect them away
-      if (!isFirstLaunch && goingToOnboarding) {
-        return isLoggedIn ? '/meals' : '/onboarding';
+
+      // Not logged in
+      if (!loggedIn) {
+
+        // allow setup + auth pages
+        if (isSetup || isAuth) {
+          return null;
+        }
+
+        return '/householdSetup';
       }
 
-      // If not logged in and not in auth flow, redirect to login
-      if (!isLoggedIn && !goingToAuth && !goingToHouseholdSetup) {
-        return '/auth/login';
-      }
 
-      // If logged in and on root, redirect to meals
-      if (isLoggedIn && fullPath == '/') {
+      // Logged in
+
+      // Don't allow logged-in users to see auth/setup/onboarding
+      if (isAuth || isSetup || isOnboarding) {
         return '/meals';
       }
+
 
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/',
+        redirect: (_,__) => '/meals',
+      ),
       GoRoute(
         path: '/onboarding',
         parentNavigatorKey: _rootNavigatorKey,
@@ -107,14 +133,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) {
       ),
       GoRoute(
         path: '/auth/login',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => LoginPage(),
       ),
       GoRoute(
         path: '/auth/signup',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => SignupPage(),
       ),
       GoRoute(
         path: '/auth/qrScanner',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => QrScannerPage(),
       ),
       StatefulShellRoute.indexedStack(

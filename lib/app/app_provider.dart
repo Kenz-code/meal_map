@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_map/core/services/device_service.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:meal_map/core/theme/theme.dart';
 import 'dart:async';
@@ -61,10 +62,15 @@ class AppStateNotifier extends ChangeNotifier {
 
   void login() {
     _isLoggedIn = true;
+
+    DeviceService.instance.registerCurrentDevice();
+
     notifyListeners();
   }
 
-  void logout() {
+  void logout() async {
+    await DeviceService.instance.unregisterCurrentDevice();
+
     AuthService().signOut();
 
     _isLoggedIn = false;
@@ -73,6 +79,8 @@ class AppStateNotifier extends ChangeNotifier {
   }
 
   void deleteAccount() async {
+    await DeviceService.instance.unregisterCurrentDevice();
+
     final e = await AuthService().deleteUser();
     debugPrint(e);
 
@@ -80,8 +88,6 @@ class AppStateNotifier extends ChangeNotifier {
 
     notifyListeners();
   }
-
-
 
   void requestQrHighlight() {
     highlightQrLogin = true;

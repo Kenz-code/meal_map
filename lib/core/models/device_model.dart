@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meal_map/core/services/shared_prefs_service.dart';
 
 class DeviceModel {
+  final String id;
   final String name;
   final String platform;
   final String model;
@@ -10,6 +10,7 @@ class DeviceModel {
   final DateTime createdAt;
 
   DeviceModel({
+    required this.id,
     required this.name,
     required this.platform,
     required this.model,
@@ -20,6 +21,7 @@ class DeviceModel {
 
   factory DeviceModel.fromMap(Map<String, dynamic> map) {
     return DeviceModel(
+      id: map['id'] as String,
       name: map['name'] as String,
       platform: map['platform'] as String,
       model: map['model'] as String,
@@ -31,6 +33,7 @@ class DeviceModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'platform': platform,
       'model': model,
@@ -38,9 +41,5 @@ class DeviceModel {
       'lastActive': Timestamp.fromDate(lastActive),
       'createdAt': Timestamp.fromDate(createdAt),
     };
-  }
-
-  String id() {
-    return SharedPrefsService.instance.getString("deviceID") ?? "";
   }
 }

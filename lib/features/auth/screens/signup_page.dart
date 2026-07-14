@@ -5,20 +5,34 @@ import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+
+  SignupPage({super.key});
+
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _email;
+
   String? _password;
+
   String? _householdName;
 
-  SignupPage({super.key});
+  bool _loading = false;
 
   Future<void> _onSignupPressed(context) async {
     final provider = Provider.of<AppStateNotifier>(context, listen: false);
     final messenger = ScaffoldMessenger.of(context);
 
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+
       String? result = await AuthService().register(_email!, _password!, _householdName!);
       if (result != null) {
         messenger.showSnackBar(SnackBar(
@@ -113,7 +127,7 @@ class SignupPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () => _onSignupPressed(context),
+                        onPressed: !_loading ? () => _onSignupPressed(context) : null,
                         child: Text("Sign up")),
                   ),
                   SizedBox(

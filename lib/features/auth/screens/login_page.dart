@@ -6,13 +6,22 @@ import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+
+  LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _email;
+
   String? _password;
 
-  LoginPage({super.key});
+  bool _loading = false;
 
   Future<void> _onLoginPressed(context) async {
 
@@ -20,6 +29,10 @@ class LoginPage extends StatelessWidget {
     final provider = Provider.of<AppStateNotifier>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+
       String? result = await AuthService().login(_email!, _password!);
       if (result != null) {
         messenger.showSnackBar(SnackBar(
@@ -115,7 +128,7 @@ class LoginPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () => _onLoginPressed(context),
+                        onPressed: !_loading ? () => _onLoginPressed(context) : null,
                         child: Text("Log in")),
                   ),
                   Spacer()
