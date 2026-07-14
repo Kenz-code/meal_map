@@ -6,7 +6,7 @@ import '../models/meal_idea.dart';
 class IdeasFirestoreDatasource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService _auth = AuthService();
-  final UserFirestoreManagerService _userFirestoreManagerService = UserFirestoreManagerService();
+  final UserFirestoreManagerService _userFirestoreManagerService = UserFirestoreManagerService.instance;
 
   String get _currentUserId => _auth.currentUser?.uid ?? '';
 

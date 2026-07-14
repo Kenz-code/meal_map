@@ -11,7 +11,7 @@ class MealsFirestoreDatasource {
   final AuthService _auth = AuthService();
 
   // User Firestore manager
-  final UserFirestoreManagerService _userFirestoreManagerService = UserFirestoreManagerService();
+  final UserFirestoreManagerService _userFirestoreManagerService = UserFirestoreManagerService.instance;
 
   /// Get the current user's UID
   String get _currentUserId => _auth.currentUser?.uid ?? '';

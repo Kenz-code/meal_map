@@ -23,7 +23,7 @@ class AuthService {
       return 'An unknown error occurred during registration.';
     }
 
-    UserFirestoreManagerService().createUserDocument(householdName);
+    UserFirestoreManagerService.instance.createUserDocument(householdName);
     return null;
   }
 

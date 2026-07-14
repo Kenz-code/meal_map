@@ -62,6 +62,17 @@ class SettingsPage extends StatelessWidget {
             },
           ),
 
+          _sectionHeader(context, "Household"),
+
+          ListTile(
+            title: "Edit household name".text(),
+            leading: Icons.house_rounded.icon(),
+            trailing: Icons.arrow_forward_ios_rounded.icon(),
+            onTap: () {
+              context.push("/settings/editHouseholdName");
+            },
+          ),
+
           _sectionHeader(context, "Devices"),
 
           ListTile(

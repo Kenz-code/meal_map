@@ -19,6 +19,7 @@ import 'package:meal_map/features/onboarding/screens/household_setup_page.dart';
 import 'package:meal_map/features/onboarding/screens/onboarding_page.dart';
 import 'package:meal_map/features/settings/screens/devices_page.dart';
 import 'package:meal_map/features/settings/screens/edit_device_name_page.dart';
+import 'package:meal_map/features/settings/screens/edit_household_name_page.dart';
 import 'package:meal_map/features/settings/screens/settings_page.dart';
 import 'package:provider/provider.dart';
 
@@ -343,7 +344,11 @@ path=$path
                 GoRoute(
                   path: "editDeviceName",
                   builder: (context, state) => EditDeviceNamePage()
-                )
+                ),
+                GoRoute(
+                  path: "editHouseholdName",
+                  builder: (context, state) => EditHouseholdNamePage(),
+                ),
               ]
             )
           ]),

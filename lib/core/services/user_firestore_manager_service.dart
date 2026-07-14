@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meal_map/core/services/firebase_auth_service.dart';
 import 'package:meal_map/core/services/shared_prefs_service.dart';
 
 class UserFirestoreManagerService {
+  UserFirestoreManagerService._();
+
+  static final instance = UserFirestoreManagerService._();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService _auth = AuthService();
 
@@ -44,5 +50,17 @@ class UserFirestoreManagerService {
     }
 
     await _userDoc.set({'householdName': householdName});
+  }
+
+  Future<String> getHouseholdName() async {
+    if (_currentUserId.isEmpty) {
+      throw Exception('User is not authenticated');
+    }
+    final doc = await _userDoc.get();
+    if (!doc.exists) {
+      throw Exception('User document does not exist');
+    }
+
+    return doc.get('householdName');
   }
 }
