@@ -29,7 +29,11 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         final initialized = context.watch<AppStateNotifier>().initialized;
         if (!initialized) return const SplashScreen();
-        return child!;
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: child!,
+        );
       },
       debugShowCheckedModeBanner: false,
     );

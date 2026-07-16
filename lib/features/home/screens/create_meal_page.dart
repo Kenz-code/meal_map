@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meal_map/features/home/data/meals_firestore_datasource.dart';
 import 'package:meal_map/features/home/data/meals_local_datasource.dart';
 import 'package:meal_map/features/home/models/meal_data.dart';
+import 'package:meal_map/features/home/services/previous_name_handler_service.dart';
 
 class CreateMealPage extends StatefulWidget {
   const CreateMealPage({super.key, required this.firstAndLastDays});
@@ -22,6 +24,8 @@ class _CreateMealPageState extends State<CreateMealPage> {
   String? _cook;
   String? _notes;
   DateTime _selectedDate = DateTime.now();
+
+  final _cookController = TextEditingController();
 
   DateTime? firstDay;
   DateTime? lastDay;
@@ -146,7 +150,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
       final MealData mealData = MealData(
           mealName: _mealName!,
           mealType: _mealType!,
-          cook: _cook!,
+          cook: _cookController.text,
           notes: _notes,
           dateTime: _selectedDate);
 
@@ -156,6 +160,8 @@ class _CreateMealPageState extends State<CreateMealPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Meal created!')),
         );
+
+        PreviousNameHandlerService.instance.addName(_cookController.text.trim());
 
         context.pop();
       } else {
@@ -203,12 +209,43 @@ class _CreateMealPageState extends State<CreateMealPage> {
             const SizedBox(height: 24),
             Text('Cook', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'e.g. John Smith'),
-              validator: (value) => value == null || value.isEmpty
-                  ? 'Please enter the cook\'s name'
-                  : null,
-              onSaved: (value) => _cook = value,
+            TypeAheadField<String>(
+              controller: _cookController,
+              focusNode: FocusNode(),
+              hideOnEmpty: true,
+              suggestionsCallback: (pattern) {
+                if (pattern.trim().isEmpty) {
+                  return [];
+                }
+
+                final names =
+                PreviousNameHandlerService.instance.loadPreviousNames();
+
+                return names.where(
+                      (name) =>
+                      name.toLowerCase().contains(pattern.toLowerCase()),
+                ).toList();
+              },
+              builder: (context, controller, focusNode) {
+                return TextFormField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  decoration: const InputDecoration(hintText: 'e.g. John Smith'),
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Please enter the cook\'s name'
+                      : null,
+                );
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(suggestion),
+                );
+              },
+              onSelected: (suggestion) {
+                setState(() {
+                  _cookController.text = suggestion;
+                });
+              },
             ),
             const SizedBox(height: 24),
             Text('Meal Date', style: theme.textTheme.titleMedium),

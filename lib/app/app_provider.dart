@@ -41,10 +41,7 @@ class AppStateNotifier extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // _isFirstLaunch = prefs.getBool('seenOnboarding') ?? true;
-
-    _isFirstLaunch = false;
+    _isFirstLaunch = SharedPrefsService.instance.getBoolOrDefault('hasNotSeenOnboarding', defaultValue: true);
 
     _isLoggedIn = AuthService().isLoggedIn();
 
@@ -54,9 +51,9 @@ class AppStateNotifier extends ChangeNotifier {
 
   void completeOnboarding() {
     _isFirstLaunch = false;
-    // SharedPreferences.getInstance().then((prefs) {
-    //   prefs.setBool('seenOnboarding', false);
-    // });
+
+    SharedPrefsService.instance.setBool("hasNotSeenOnboarding", false);
+
     notifyListeners();
   }
 

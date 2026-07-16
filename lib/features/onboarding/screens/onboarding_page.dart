@@ -2,7 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meal_map/app/app_provider.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -146,6 +148,7 @@ class _OnboardingPageState extends State<OnboardingPage>
 
     _exitController.forward();
 
+    context.read<AppStateNotifier>().completeOnboarding();
     context.push('/householdSetup');
   }
 
@@ -174,10 +177,13 @@ class _OnboardingPageState extends State<OnboardingPage>
                   scale: _logoScale,
                   child: FadeTransition(
                     opacity: _logoOpacity,
-                    child: Image.asset(
-                      _logoAsset,
-                      isAntiAlias: false,
-                      color: context.colorScheme.primary,
+                    child: SizedBox(
+                      height: (height >= 770) ? null : 200,
+                      child: Image.asset(
+                        _logoAsset,
+                        isAntiAlias: false,
+                        color: context.colorScheme.primary,
+                      ),
                     ),
                   ),
                 ),

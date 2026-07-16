@@ -1,6 +1,6 @@
 TODO:
--auto complete names in meals and meal ideas
 -when log into account on device, save email for one tap login in future
+-fix the app logo to work seamlessly
 
 DONE:
 -create dropdown effect for each day in the meals page
@@ -21,3 +21,4 @@ DONE:
 -app "tutorial"
 -household device management
 -abilty to change household name
+-auto complete names in meals and meal ideas

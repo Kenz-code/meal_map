@@ -35,6 +35,10 @@ class _LoginPageState extends State<LoginPage> {
 
       String? result = await AuthService().login(_email!, _password!);
       if (result != null) {
+        setState(() {
+          _loading = false;
+        });
+
         messenger.showSnackBar(SnackBar(
           content: Text(
             result,
@@ -68,71 +72,72 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Spacer(),
-                  Center(
-                    child: Text(
-                      "Join household",
-                      style: Theme.of(context).textTheme.headlineMedium,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        "Join household",
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      final result = await context.push("/auth/qrScanner");
+                    64.gapHeight,
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        final result = await context.push("/auth/qrScanner");
 
-                      if (result == true) {
-                        Provider.of<AppStateNotifier>(context, listen: false).login();
-                      }
-                    },
-                    icon: Icon(Icons.qr_code_scanner_rounded),
-                    label: "Scan QR to join household".text(),
-                  ),
-                  Divider(height: 48,),
-                  Text(
-                    "Manually log in",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: 'Email',
+                        if (result == true) {
+                          Provider.of<AppStateNotifier>(context, listen: false).login();
+                        }
+                      },
+                      icon: Icon(Icons.qr_code_scanner_rounded),
+                      label: "Scan QR to join household".text(),
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Please enter a email'
-                        : null,
-                    onChanged: (value) => _email = value,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      hintText: 'Password',
+                    Divider(height: 48,),
+                    Text(
+                      "Manually log in",
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Please enter a password'
-                        : null,
-                    onChanged: (value) => _password = value,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: !_loading ? () => _onLoginPressed(context) : null,
-                        child: Text("Log in")),
-                  ),
-                  Spacer()
-                ],
+                    SizedBox(
+                      height: 16,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Email',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter a email'
+                          : null,
+                      onChanged: (value) => _email = value,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        hintText: 'Password',
+                      ),
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter a password'
+                          : null,
+                      onChanged: (value) => _password = value,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: !_loading ? () => _onLoginPressed(context) : null,
+                          child: Text("Log in")),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

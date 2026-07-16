@@ -78,11 +78,11 @@ path=$path
       if (!loggedIn) {
 
         // allow setup + auth pages
-        if (isSetup || isAuth) {
+        if (isSetup || isAuth || isOnboarding) {
           return null;
         }
 
-        return '/householdSetup';
+        return '/onboarding';
       }
 
 

@@ -1,8 +1,10 @@
 import 'package:exui/exui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
 // Note: Assuming your imports for services and data remain correct.
 import 'package:meal_map/core/services/meal_idea_api_service.dart';
+import 'package:meal_map/features/home/services/previous_name_handler_service.dart';
 import 'package:meal_map/features/ideas/data/ideas_firestore_datasource.dart';
 import 'package:meal_map/features/ideas/data/ideas_local_datasource.dart';
 import 'package:meal_map/features/ideas/models/meal_idea.dart';
@@ -28,6 +30,8 @@ class _AddIdeasPageState extends State<AddIdeasPage>
   bool _isLoading = false;
   bool _isManualSaving = false;
 
+  final _personTextController = TextEditingController();
+
   List<String> generatedIdeas = [];
 
   @override
@@ -42,6 +46,7 @@ class _AddIdeasPageState extends State<AddIdeasPage>
   void dispose() {
     _promptTextFieldFocusNode.dispose();
     _tabController.dispose();
+    _personTextController.dispose();
     super.dispose();
   }
 
@@ -55,9 +60,11 @@ class _AddIdeasPageState extends State<AddIdeasPage>
     final newIdea = MealIdea(
       idea: idea,
       type: selectedType,
-      person: person.trim(),
+      person: _personTextController.text.trim(),
       notes: notes.trim(),
     );
+
+    PreviousNameHandlerService.instance.addName(_personTextController.text.trim());
 
     await IdeasFirestoreDatasource().saveMealIdea(newIdea);
   }
@@ -74,6 +81,7 @@ class _AddIdeasPageState extends State<AddIdeasPage>
     setState(() {
       _isManualSaving = true;
     });
+
     await _saveMealIdea(manualIdea!);
     Navigator.pop(context);
   }
@@ -98,6 +106,7 @@ class _AddIdeasPageState extends State<AddIdeasPage>
 
   Future<void> _addGenerated(String idea) async {
     await _saveMealIdea(idea);
+
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text("Saved!")));
   }
@@ -140,15 +149,45 @@ class _AddIdeasPageState extends State<AddIdeasPage>
     return Column(
       children: [
         const SizedBox(height: 8),
-        TextFormField(
-          decoration: const InputDecoration(labelText: "Person's Name"),
-          initialValue: person,
-          onChanged: (val) => person = val,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return "Please enter person's name";
+        TypeAheadField<String>(
+          controller: _personTextController,
+          focusNode: FocusNode(),
+          hideOnEmpty: true,
+          suggestionsCallback: (pattern) {
+            if (pattern.trim().isEmpty) {
+              return [];
             }
-            return null;
+
+            final names =
+            PreviousNameHandlerService.instance.loadPreviousNames();
+
+            return names.where(
+                  (name) =>
+                  name.toLowerCase().contains(pattern.toLowerCase()),
+            ).toList();
+          },
+          builder: (context, controller, focusNode) {
+            return TextFormField(
+              controller: controller,
+              focusNode: focusNode,
+              decoration: const InputDecoration(labelText: "Person's Name"),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return "Please enter person's name";
+                }
+                return null;
+              },
+            );
+          },
+          itemBuilder: (context, suggestion) {
+            return ListTile(
+              title: Text(suggestion),
+            );
+          },
+          onSelected: (suggestion) {
+            setState(() {
+              _personTextController.text = suggestion;
+            });
           },
         ),
         const SizedBox(height: 12),
@@ -205,6 +244,8 @@ class _AddIdeasPageState extends State<AddIdeasPage>
       mainAxisSize: MainAxisSize.min,
       children: [
         TextFormField(
+          minLines: 1,
+          maxLines: null,
           focusNode: _promptTextFieldFocusNode,
           decoration: const InputDecoration(
             hintText: "Example: high protein, easy to make",
