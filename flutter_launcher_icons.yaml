@@ -19,9 +19,9 @@ flutter_launcher_icons:
 
   web:
     generate: true
-    image_path: "assets/logo/mealmaplogo_Fancy_png.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
+    image_path: "assets/logo/mealmaplogo_Fancy_notext_full.png"
+    background_color: "#ffffff"
+    theme_color: "#ffffff"
 
   windows:
     generate: false
