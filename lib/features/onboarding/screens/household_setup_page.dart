@@ -1,7 +1,9 @@
 import 'package:exui/exui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_map/core/extensions/context_theme_extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HouseholdSetupPage extends StatefulWidget {
   const HouseholdSetupPage({super.key});
@@ -164,83 +166,97 @@ class _HouseholdSetupPageState extends State<HouseholdSetupPage>
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
             children: [
-
-              animatedItem(
-                opacity: _titleOpacity,
-                scale: _titleScale,
-                offset: _titleOffset,
-                child: "Welcome".text(
-                  style: context.textTheme.headlineLarge,
-                ),
-              ),
-
-              SizedBox(
-                height: height >= 840 ? 60 : 45,
-              ),
-
-
-              animatedItem(
-                opacity: _questionOpacity,
-                scale: _questionScale,
-                offset: _questionOffset,
-                child: "Do you already have a household?".text(
-                  style: context.textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-
-              SizedBox(
-                height: height >= 840 ? 120 : 90,
-              ),
-
-
-              animatedItem(
-                opacity: _createOpacity,
-                scale: _createScale,
-                offset: _createOffset,
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        context.push('/auth/signup');
-                      },
-                      child: "Create a household".text(),
-                    ).expanded1,
-                  ],
-                ),
-              ),
-
-
-              AnimatedBuilder(
-                animation: _dividerScale,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scaleX: _dividerScale.value,
-                    child: child,
+              IconButton(
+                onPressed: () async {
+                  final url = Uri.parse(
+                      'https://github.com/Kenz-code/meal_map/releases/download/1.0.0/meal-map-release.apk'
                   );
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
                 },
-                child: const Divider(),
-              ),
+                icon: Icons.install_mobile_rounded.icon(),
+              ).alignTopRight().visibleIf(kIsWeb),
+
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  animatedItem(
+                    opacity: _titleOpacity,
+                    scale: _titleScale,
+                    offset: _titleOffset,
+                    child: "Welcome".text(
+                      style: context.textTheme.headlineLarge,
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: height >= 840 ? 60 : 45,
+                  ),
 
 
-              animatedItem(
-                opacity: _joinOpacity,
-                scale: _joinScale,
-                offset: _joinOffset,
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        context.push('/auth/login');
-                      },
-                      child: "Join a household".text(),
-                    ).expanded1,
-                  ],
-                ),
+                  animatedItem(
+                    opacity: _questionOpacity,
+                    scale: _questionScale,
+                    offset: _questionOffset,
+                    child: "Do you already have a household?".text(
+                      style: context.textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+
+
+                  SizedBox(
+                    height: height >= 840 ? 120 : 90,
+                  ),
+
+
+                  animatedItem(
+                    opacity: _createOpacity,
+                    scale: _createScale,
+                    offset: _createOffset,
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            context.push('/auth/signup');
+                          },
+                          child: "Create a household".text(),
+                        ).expanded1,
+                      ],
+                    ),
+                  ),
+
+
+                  AnimatedBuilder(
+                    animation: _dividerScale,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scaleX: _dividerScale.value,
+                        child: child,
+                      );
+                    },
+                    child: const Divider(),
+                  ),
+
+
+                  animatedItem(
+                    opacity: _joinOpacity,
+                    scale: _joinScale,
+                    offset: _joinOffset,
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            context.push('/auth/login');
+                          },
+                          child: "Join a household".text(),
+                        ).expanded1,
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
