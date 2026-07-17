@@ -205,13 +205,11 @@ class DeviceService {
     final deviceId = await getDeviceId();
 
     if (kIsWeb) {
-      final info = await deviceInfo.deviceInfo;
-
+      final info = await deviceInfo.webBrowserInfo;
       return DeviceModel(
         id: deviceId,
         platform: 'Web',
-        model:
-        '${info.data['manufacturer'].capitalizeFirst} ${info.data['model']}',
+        model: '${info.browserName.name}',
         name: await getCurrentDeviceName(),
         appVersion: AppVersionService.instance.version,
         createdAt: DateTime.now(),
